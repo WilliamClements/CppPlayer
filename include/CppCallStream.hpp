@@ -1,10 +1,6 @@
-PERSISTENCEDB_HEADER
-FILE_DB_ONLY
 /*
-$CODE_OWNER William_Clements
-$SECONDARY_OWNERS Dmitry_Brumberg David_Becroft
-$ACCESS_RESTRICTED No
-*/
+ * Copyright 2018 Autodesk
+ */
 
 #pragma once
 

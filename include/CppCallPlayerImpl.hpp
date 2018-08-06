@@ -1,11 +1,11 @@
 /*
-$CODE_OWNER William_Clements
-$SECONDARY_OWNERS Dmitry_Brumberg David_Becroft
-$ACCESS_RESTRICTED No
+* Copyright 2018 Autodesk
 */
 
-#include <stdafx.h>
-// CppCallPlayer.cpp
+#pragma once
+
+// CppCallPlayerImpl.hpp
+
 #include <CppCallPlayer.h>
 
 #include <ArgsReader.h>
@@ -18,17 +18,6 @@ $ACCESS_RESTRICTED No
 
 #undef max
 #include <propertysets/hfdm.h>
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-namespace CppCallPlayerFile
-{
-   static char THIS_FILE[] = __FILE__;
-}
-#define THIS_FILE CppCallPlayerFile::THIS_FILE
-#endif
-#define NEW_IS_REDEFINED 1
 
 CppCallPlayer s_player;
 

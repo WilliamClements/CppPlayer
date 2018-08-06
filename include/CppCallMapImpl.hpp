@@ -1,26 +1,15 @@
 /*
-$CODE_OWNER William_Clements
-$SECONDARY_OWNERS Dmitry_Brumberg David_Becroft
-$ACCESS_RESTRICTED No
-*/
+ * Copyright 2018 Autodesk
+ */
 
-#include <stdafx.h>
-// CppCallMap.cpp
+#pragma once
+
+// CppCallMapImpl.hpp
+
 #include <CppCallMap.h>
 
 #include <CppCallError.h>
 #include <CRSError.h>
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-namespace CppCallMapFile
-{
-   static char THIS_FILE[] = __FILE__;
-}
-#define THIS_FILE CppCallMapFile::THIS_FILE
-#endif
-#define NEW_IS_REDEFINED 1
 
 CppCallMapEntry::CppCallMapEntry(std::string api, PlaybackCall call, bool bReturnsValue, int numArgs)
    : m_api(api)
