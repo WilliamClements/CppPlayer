@@ -1,11 +1,11 @@
 /*
-$CODE_OWNER William_Clements
-$SECONDARY_OWNERS Dmitry_Brumberg David_Becroft
-$ACCESS_RESTRICTED No
-*/
+ * Copyright 2018 Autodesk
+ */
 
-#include <stdafx.h>
-// CppCallRecorder.cpp
+#pragma once
+
+// CppCallRecorderImpl.hpp
+
 #include <CppCallRecorder.h>
 
 #include <CppCallError.h>
@@ -14,17 +14,6 @@ $ACCESS_RESTRICTED No
 #include <IHFDMmain.h>
 #include <sstream>
 #include <time.h>
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-namespace CppCallRecorderFile
-{
-   static char THIS_FILE[] = __FILE__;
-}
-#define THIS_FILE CppCallRecorderFile::THIS_FILE
-#endif
-#define NEW_IS_REDEFINED 1
 
 static std::shared_ptr<CppCallRecorder> s_CppCallRecorder;
 std::shared_ptr<IHFDMmain> CppCallRecorder::s_IHFDMmain;

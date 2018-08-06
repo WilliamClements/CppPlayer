@@ -1,28 +1,17 @@
 /*
-$CODE_OWNER William_Clements
-$SECONDARY_OWNERS Dmitry_Brumberg David_Becroft
-$ACCESS_RESTRICTED No
-*/
+ * Copyright 2018 Autodesk
+ */
 
-#include <stdafx.h>
-// ArgsWriter.cpp
+#pragma once
+
+// ArgsWriterImpl.hpp
+
 #include <ArgsWriter.h>
 
 #include <CppCallMap.h>
 #include <CppCallStream.h>
 #include <IHFDMtrackable.h>
 #include <PropertyId.h>
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-namespace ArgsWriterFile
-{
-   static char THIS_FILE[] = __FILE__;
-}
-#define THIS_FILE ArgsWriterFile::THIS_FILE
-#endif
-#define NEW_IS_REDEFINED 1
 
 ArgsWriter::ArgsWriter(CppCallStream& callStream)
    : m_callStream(callStream)

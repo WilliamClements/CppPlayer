@@ -1,9 +1,10 @@
 /*
-$CODE_OWNER William_Clements
-$SECONDARY_OWNERS David_Becroft, Dmitry_Brumberg
-$ACCESS_RESTRICTED No
+* Copyright 2018 Autodesk
 */
+
 #pragma once
+
+// CppCallIO_Json.hpp
 
 #include <ICppCallIo.h>
 

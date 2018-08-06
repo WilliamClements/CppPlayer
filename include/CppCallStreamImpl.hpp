@@ -1,26 +1,14 @@
 /*
-$CODE_OWNER William_Clements
-$SECONDARY_OWNERS Dmitry_Brumberg David_Becroft
-$ACCESS_RESTRICTED No
-*/
+ * Copyright 2018 Autodesk
+ */
 
-#include <stdafx.h>
-// CppCallStream.cpp
+#pragma once
+
+// CppCallStreamImpl.hpp
 #include <CppCallStream.h>
 
 #include <CppCallError.h>
 #include <CppCallMap.h>
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-namespace CppCallStreamFile
-{
-   static char THIS_FILE[] = __FILE__;
-}
-#define THIS_FILE CppCallStreamFile::THIS_FILE
-#endif
-#define NEW_IS_REDEFINED 1
 
 CppCallStream::CppCallStream()
    : m_u64CallsCounter()
