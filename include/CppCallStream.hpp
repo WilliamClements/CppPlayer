@@ -5,13 +5,13 @@
 #pragma once
 
 #include <GUIDvalue.h>
-#include <ICppCallIo.h>
+#include <ICppCallIo.hpp>
 #include <unordered_map>
 
-class IHFDMtrackable;
+class ITrackable;
 
 using Aliased
-   = std::unordered_map<std::string, std::shared_ptr<IHFDMtrackable>, std::hash<std::string>>;
+   = std::unordered_map<std::string, std::shared_ptr<ITrackable>, std::hash<std::string>>;
 using AliasedURNs
    = std::unordered_map<std::string, std::string, std::hash<std::string>>;
 

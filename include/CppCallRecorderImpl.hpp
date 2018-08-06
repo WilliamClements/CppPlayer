@@ -23,7 +23,7 @@ std::shared_ptr<IHFDMmain> CppCallRecorder::start_IHFDM(unsigned int flags, std:
 {
    // These flags are for the whole session
    s_IHFDMmain = std::make_shared<IHFDMmain>();
-   IHFDMtrackable::StartFlags = flags;
+   ITrackable::StartFlags = flags;
    // instantiate our singleton
    (void)CppCallRecordingManager();
    CppCallRecordingManager()->start_IHFDM_private(jsonfilename);
@@ -32,13 +32,13 @@ std::shared_ptr<IHFDMmain> CppCallRecorder::start_IHFDM(unsigned int flags, std:
 
 void CppCallRecorder::start_IHFDM_private(std::string jsonfilename)
 {
-   if ((IHFDM_Do_Recording | IHFDM_Do_Playback) & ITrackable::StartFlags)
+   if ((Do_Recording | Do_Playback) & ITrackable::StartFlags)
    {
       failUnlessPredicate(!jsonfilename.empty() && fileExists(jsonfilename), CppCallError_FileDoesNotExist);
       this->m_outputfilename = jsonfilename;
    }
 
-   if (IHFDM_Do_Recording & ITrackable::StartFlags)
+   if (Do_Recording & ITrackable::StartFlags)
    {
       ITrackable::Recorder = shared_from_this();
       this->startRecording();
@@ -48,7 +48,7 @@ void CppCallRecorder::start_IHFDM_private(std::string jsonfilename)
 /* static */
 void CppCallRecorder::finish_IHFDM()
 {
-   if (IHFDM_Do_Recording & ITrackable::StartFlags)
+   if (Do_Recording & ITrackable::StartFlags)
    {
       CppCallRecordingManager()->finishRecording();
    }
@@ -70,8 +70,7 @@ void CppCallRecorder::finishRecording()
 
 CppCallRecorder::CppCallRecorder()
    : m_outputfilename()
-{
-}
+{}
 CppCallRecorder::~CppCallRecorder()
 {}
 

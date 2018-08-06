@@ -16,9 +16,6 @@
 #include <CppCallRecorder.h>
 #include <time.h>
 
-#undef max
-#include <propertysets/hfdm.h>
-
 CppCallPlayer s_player;
 
 // This is the complete calling sequence for playback
@@ -35,7 +32,7 @@ void playbackCppCalls(std::string filename, IHFDMLoginCallback uiLoginFun)
 void CppCallPlayer::initializeForPlayback(IHFDMLoginCallback uiLoginFun)
 {
    m_callStream = std::make_unique<CppCallStream>();
-   IHFDMtrackable::Recorder = CppCallRecordingManager();
+   ITrackable::Recorder = CppCallRecordingManager();
    m_pIHFDMmain = std::make_shared<IHFDMmain>();
    m_pIHFDMmain->registerLoginCallback(uiLoginFun);
 }

@@ -5,11 +5,11 @@
 #pragma once
 
 #include <CppCallError.hpp>
-#include <CRSError.hpp>
+#include <CRSError.h>
 
 class CppCallMapEntry;
 class CppCallStream;
-class IHFDMtrackable;
+class ITrackable;
 class PropertyId;
 
 class ArgsReader final
@@ -17,9 +17,9 @@ class ArgsReader final
 private:
    CppCallStream&                      m_callStream;
    const CppCallMapEntry*              m_pEntry;
-   std::shared_ptr<IHFDMtrackable>     m_pThisTarget;
+   std::shared_ptr<ITrackable>         m_pThisTarget;
    mutable std::vector<std::string>    m_reserve;
-   mutable std::vector<std::shared_ptr<IHFDMtrackable>>
+   mutable std::vector<std::shared_ptr<ITrackable>>
                                        m_fulfill;
    mutable int                         m_nArgsPoppedSoFar;
 
@@ -39,7 +39,7 @@ protected:
    std::string api() const;
 
 public:
-   std::shared_ptr<IHFDMtrackable> getThisTarget() const
+   std::shared_ptr<ITrackable> getThisTarget() const
    {
       return m_pThisTarget;
    }
@@ -51,16 +51,16 @@ public:
    double                              popDouble() const;
    PropertyId                          popPropertyId() const;
    void                                callCpp(int nFields) const;
-   void                                aliasTrackable(std::string guid, std::shared_ptr<IHFDMtrackable> pTrackable) const;
-   std::shared_ptr<IHFDMtrackable>     unaliasTrackable(std::string ssMemorexId) const;
-   std::shared_ptr<IHFDMtrackable>     unaliasTrackableSafely(std::string ssMemorexId) const;
+   void                                aliasTrackable(std::string guid, std::shared_ptr<ITrackable> pTrackable) const;
+   std::shared_ptr<ITrackable>         unaliasTrackable(std::string ssMemorexId) const;
+   std::shared_ptr<ITrackable>         unaliasTrackableSafely(std::string ssMemorexId) const;
    void                                aliasURN(std::string ssLiveURN, std::string ssMemorexURN) const;
    std::string                         unaliasURN(std::string ssMemorexURN) const;
 
    void                                reserveZero() const;
    void                                reserveOne() const;
    void                                reserve() const;
-   void                                fulfill(std::shared_ptr<IHFDMtrackable> pTrackable) const;
+   void                                fulfill(std::shared_ptr<ITrackable> pTrackable) const;
    void                                fulfillReserved() const;
 
    void compareBeforeAndAfter(bool bMemorex, bool bLive) const
@@ -73,12 +73,12 @@ public:
       failUnlessPredicate(sMemorex == sLive, CppCallError_UnequalReturnResult, m_pEntry);
    }
 
-   void mustBeNull(IHFDMtrackable* pTrackable) const
+   void mustBeNull(ITrackable* pTrackable) const
    {
       failUnlessPredicate(!pTrackable, CppCallError_OutOfSequence, m_pEntry);
    }
 
-   void mustNotBeNull(IHFDMtrackable* pTrackable) const
+   void mustNotBeNull(ITrackable* pTrackable) const
    {
       failUnlessPredicate(!!pTrackable, CppCallError_OutOfSequence, m_pEntry);
    }
@@ -98,3 +98,5 @@ public:
       failUnlessPredicate(bFound, err, m_pEntry);
    }
 };
+
+#include <ArgsReaderImpl.hpp>

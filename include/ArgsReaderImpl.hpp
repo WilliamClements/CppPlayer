@@ -51,12 +51,14 @@ double ArgsReader::popDouble() const
    return cppCallStream().io().popDouble();
 }
 
+#if WOX
 PropertyId ArgsReader::popPropertyId() const
 {
    ++m_nArgsPoppedSoFar;
    std::string stringlist = cppCallStream().io().popString();
    return PropertyId{ cppCallStream().recomposeStringVector(stringlist) };
 }
+#endif
 
 void ArgsReader::callCpp(int nFields) const
 {
@@ -67,13 +69,13 @@ void ArgsReader::callCpp(int nFields) const
    fulfillReserved();
 }
 
-void ArgsReader::aliasTrackable(std::string ssTrackable, std::shared_ptr<IHFDMtrackable> pTrackable) const
+void ArgsReader::aliasTrackable(std::string ssTrackable, std::shared_ptr<ITrackable> pTrackable) const
 {
    // Associate guid from file with corresponding live object just created.
    cppCallStream().aliased()[ssTrackable] = pTrackable;
 }
 
-std::shared_ptr<IHFDMtrackable> ArgsReader::unaliasTrackable(std::string ssMemorexId) const
+std::shared_ptr<ITrackable> ArgsReader::unaliasTrackable(std::string ssMemorexId) const
 {
    // Get live object given guid from file.
    auto ret = unaliasTrackableSafely(ssMemorexId);
@@ -81,10 +83,10 @@ std::shared_ptr<IHFDMtrackable> ArgsReader::unaliasTrackable(std::string ssMemor
    return ret;
 }
 
-std::shared_ptr<IHFDMtrackable> ArgsReader::unaliasTrackableSafely(std::string ssMemorexId) const
+std::shared_ptr<ITrackable> ArgsReader::unaliasTrackableSafely(std::string ssMemorexId) const
 {
    // Get live object given guid from file. Don't throw. Let error be forced by caller.
-   std::shared_ptr<IHFDMtrackable> ret;
+   std::shared_ptr<ITrackable> ret;
    auto live = cppCallStream().aliased().find(ssMemorexId);
    if (cppCallStream().aliased().end() != live)
       ret = live->second;
@@ -133,7 +135,7 @@ void ArgsReader::reserve() const
    if (toReserve != "nullptr")
       m_reserve.push_back(toReserve);
 }
-void ArgsReader::fulfill(std::shared_ptr<IHFDMtrackable> pTrackable) const
+void ArgsReader::fulfill(std::shared_ptr<ITrackable> pTrackable) const
 {
    if (pTrackable)
       m_fulfill.push_back(pTrackable);
