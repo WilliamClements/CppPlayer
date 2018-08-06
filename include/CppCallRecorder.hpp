@@ -6,7 +6,7 @@
 
 // CppCallRecorder.hpp
 
-#include <CppCallMap.h>
+#include <CppCallMap.hpp>
 #include <GUIDvalue.h>
 #include <unordered_map>
 
@@ -15,9 +15,9 @@ class IHFDMmain;
 
 enum IHFDM_Start_Flags
 {
-   IHFDM_Do_Execution = 0x1
-   , IHFDM_Do_Recording = 0x2
-   , IHFDM_Do_Playback = 0x4
+   Do_Execution = 0x1
+   , Do_Recording = 0x2
+   , Do_Playback = 0x4
 };
 
 class CppCallRecorder : public std::enable_shared_from_this<CppCallRecorder>

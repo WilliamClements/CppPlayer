@@ -6,7 +6,7 @@
 
 // CppCallPlayer.hpp
 
-#include <CppCallPlayerInterface.h>
+#include <CppCallPlayerInterface.hpp>
 #include <IHFDMtrackable.h>
 
 class ArgsReader;

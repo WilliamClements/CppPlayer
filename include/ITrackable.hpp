@@ -4,10 +4,10 @@
 
 #pragma once
 
-#include <ArgsReader.h>
-#include <ArgsWriter.h>
-#include <CppCallMap.h>
-#include <CppCallRecorder.h>
+#include <ArgsReader.hpp>
+#include <ArgsWriter.hpp>
+#include <CppCallMap.hpp>
+#include <CppCallRecorder.hpp>
 #include <functional>
 
 class CppCallRecorder;
@@ -50,7 +50,7 @@ protected:
    {
       return Recorder.lock();
    }
-   static std::shared_ptr<CppCallRecorder> recording()
+   static bool recording()
    {
       return (!inPlayer());
    }
