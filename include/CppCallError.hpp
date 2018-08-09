@@ -4,7 +4,9 @@
 
 #pragma once
 
-// CppCallError.hpp
+ // CppCallError.hpp
+
+#include <string>
 
 class CppCallMapEntry;
 

@@ -4,8 +4,6 @@
 
 #pragma once
 
-#include <ArgsReader.hpp>
-#include <ArgsWriter.hpp>
 #include <CppCallMap.hpp>
 #include <CppCallRecorder.hpp>
 #include <functional>
@@ -30,8 +28,10 @@ class ITrackable : public std::enable_shared_from_this<ITrackable>
 {
    // Construction
 public:
-   ITrackable();
-   virtual ~ITrackable();
+   ITrackable()
+   {}
+   virtual ~ITrackable()
+   {}
 
    // Methods
 public:
