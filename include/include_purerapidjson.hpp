@@ -13,7 +13,7 @@
 #define RAPIDJSON_HAS_CXX11_TYPETRAITS 1
 #define RAPIDJSON_HAS_STDSTRING 1
 
-#include <rapidjson/include/rapidjson/fwd.h>
+// WOX #include <rapidjson/include/rapidjson/fwd.h>
 
 #pragma warning(push)
 #pragma warning(disable: 4995)

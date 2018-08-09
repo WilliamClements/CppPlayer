@@ -6,9 +6,6 @@
 
 // CppCallPlayerInterface.hpp
 
-#include <CRSError.h>
+#include <CRSError.hpp>
 
-#if defined(IHFDM_HOME)
-IHFDMAPI
-#endif
 void playbackCppCalls(std::string filename, std::function<Err()> uiLoginFun = nullptr);
