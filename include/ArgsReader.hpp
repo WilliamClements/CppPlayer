@@ -11,11 +11,6 @@
 #include <CppCallStream.hpp>
 #include <CRSError.hpp>
 
-class CppCallMapEntry;
-class CppCallStream;
-class ITrackable;
-class PropertyId;
-
 class ArgsReader final
 {
 private:
@@ -80,14 +75,12 @@ public:
       ++m_nArgsPoppedSoFar;
       return cppCallStream().io().popDouble();
    }
-#if WOX
-   PropertyId popPropertyId() const
+   std::vector<std::string> popStringVector() const
    {
       ++m_nArgsPoppedSoFar;
       std::string stringlist = cppCallStream().io().popString();
-      return PropertyId{ cppCallStream().recomposeStringVector(stringlist) };
+      return cppCallStream().recomposeStringVector(stringlist);
    }
-#endif
    void callCpp(int nFields) const
    {
       ++cppCallStream().callsCounter();
@@ -101,7 +94,7 @@ public:
       // Associate guid from file with corresponding live object just created.
       cppCallStream().aliased()[ssTrackable] = pTrackable;
    }
-   std::shared_ptr<ITrackable>         unaliasTrackable(std::string ssMemorexId) const
+   std::shared_ptr<ITrackable> unaliasTrackable(std::string ssMemorexId) const
    {
       // Get live object given guid from file.
       auto ret = unaliasTrackableSafely(ssMemorexId);

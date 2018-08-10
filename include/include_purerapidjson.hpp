@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <Aliases.hpp>
+
 #undef min
 #undef max
 
@@ -12,8 +14,6 @@
 #define RAPIDJSON_HAS_CXX11_RVALUE_REFS 1
 #define RAPIDJSON_HAS_CXX11_TYPETRAITS 1
 #define RAPIDJSON_HAS_STDSTRING 1
-
-// WOX #include <rapidjson/include/rapidjson/fwd.h>
 
 #pragma warning(push)
 #pragma warning(disable: 4995)
@@ -64,7 +64,32 @@ namespace JSON
    // These are homegrown utilities
 
    // Writes string representation of the JSON document to a file.
-   void stringify(const Document& dom, std::string filename);
+   void stringify(const Document& dom, fs::path filepath)
+   {
+      FILE* fp = nullptr;
+      std::string filename = filepath.parent_path().generic_string();
+      filename += filepath.filename().generic_string();
+      errno_t bad = fopen_s(&fp, filename.c_str(), "wb"); // non-Windows use "w"
+      failUnlessPredicate(!bad, CppCallError_FileCannotBeCreated, filename);
+      // good open, continue
+      char writeBuffer[65536];
+      FileWriteStream os(fp, writeBuffer, sizeof(writeBuffer));
+      Writer<FileWriteStream> writer(os);
+      dom.Accept(writer);
+      fclose(fp);
+   }
    // Reads string representation from file and populates JSON document. 
-   void parse(Document& dom, std::string filename);
+   void parse(Document& dom, fs::path filepath)
+   {
+      FILE* fp = nullptr;
+      std::string filename = filepath.parent_path().generic_string();
+      filename += filepath.filename().generic_string();
+      errno_t bad = fopen_s(&fp, filename.c_str(), "rb"); // non-Windows use "r"
+      failUnlessPredicate(!bad, CppCallError_FileDoesNotExist, filename);
+      // good open, continue
+      char readBuffer[65536];
+      FileReadStream is(fp, readBuffer, sizeof(readBuffer));
+      (void)dom.ParseStream<JSON::ParseFlag::kParseDefaultFlags, UTF8, FileReadStream>(is);
+      fclose(fp);
+   }
 }

@@ -51,7 +51,6 @@ public:
       m_jsonBody.SetArray();
       m_vCalls.SetArray();
    }
-
    ~CppCallIO_Json()
    {}
 
@@ -97,13 +96,13 @@ public:
          m_dom.AddMember(JSON::Value("Body"), tempBody, json_allocator());
       }
    }
-   void finishRecording(std::string outputfilename) override
+   void finishRecording(fs::path outputfilepath) override
    {
       m_dom["Body"] = std::move(m_vCalls);
 
-      JSON::stringify(m_dom, outputfilename);
+      JSON::stringify(m_dom, outputfilepath);
    }
-   void playbackAll(std::string inputFileName, OnStartPlaying cb, PlayerOfOneCall playerOfOne) override
+   void playbackAll(fs::path inputFileName, OnStartPlaying cb, PlayerOfOneCall playerOfOne) override
    {
       JSON::parse(m_dom, inputFileName);
 
@@ -205,31 +204,3 @@ private:
       return ss;
    }
 };
-
-namespace JSON
-{
-   void stringify(const Document& dom, std::string filename)
-   {
-      FILE* fp = nullptr;
-      errno_t bad = fopen_s(&fp, filename.c_str(), "wb"); // non-Windows use "w"
-      failUnlessPredicate(!bad, CppCallError_FileCannotBeCreated, filename);
-      // good open, continue
-      char writeBuffer[65536];
-      FileWriteStream os(fp, writeBuffer, sizeof(writeBuffer));
-      Writer<FileWriteStream> writer(os);
-      dom.Accept(writer);
-      fclose(fp);
-   }
-
-   void parse(Document& dom, std::string filename)
-   {
-      FILE* fp = nullptr;
-      errno_t bad = fopen_s(&fp, filename.c_str(), "rb"); // non-Windows use "r"
-      failUnlessPredicate(!bad, CppCallError_FileDoesNotExist, filename);
-      // good open, continue
-      char readBuffer[65536];
-      FileReadStream is(fp, readBuffer, sizeof(readBuffer));
-      (void)dom.ParseStream<JSON::ParseFlag::kParseDefaultFlags, UTF8, FileReadStream>(is);
-      fclose(fp);
-   }
-}

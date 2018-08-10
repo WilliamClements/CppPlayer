@@ -6,10 +6,9 @@
 
 #include <CppCallMap.hpp>
 #include <CppCallRecorder.hpp>
+#include <CRSerror.hpp>
 #include <functional>
-
-class CppCallRecorder;
-enum Err;
+#include <iostream>
 
 enum
 {
@@ -30,7 +29,7 @@ class ITrackable : public std::enable_shared_from_this<ITrackable>
 public:
    ITrackable()
    {}
-   virtual ~ITrackable()
+   virtual ~ITrackable() = 0
    {}
 
    // Methods
@@ -62,9 +61,33 @@ protected:
    CppCallStream& cppCallStream();
 
 public:
-   static void reportError(const char* operation, const std::shared_ptr<std::exception>& sException);
-   static void reportError(const char* operation, const std::exception& e);
-   static void reportInfo(Err, std::string ss);
+   static void reportError(const char* operation, const std::shared_ptr<std::exception>& sException)
+   {
+      const auto* pE = sException.get();
+      if (!pE)
+      {
+         // This should never happen...but if we are crashing,
+         // try not to make matters worse
+         reportInfo(ERR_SUCCESS, "Lynx: reportError -- Why no std::exception object?\n");
+      }
+      else
+      {
+         reportError(operation, *pE);
+      }
+   }
+   static void reportError(const char* operation, const std::exception& error)
+   {
+      std::string ss;
+      ss += "Failed to ";
+      ss += operation;
+      ss += " because ";
+      ss += error.what();
+      reportInfo(ERR_FAILURE, ss);
+   }
+   static void reportInfo(Err, std::string ss)
+   {
+      std::cout << ss.c_str() << std::endl;
+   }
 
    // Attributes
 public:
@@ -72,10 +95,12 @@ public:
 
    // Globals
 public:
-   static unsigned int                   StartFlags;
    static std::weak_ptr<CppCallRecorder> Recorder;
    static ITrackableCallback             Callback;
 };
+
+std::weak_ptr<CppCallRecorder> ITrackable::Recorder;
+ITrackableCallback ITrackable::Callback;
 
 // Inner function used in boilerplates
 template<class ITarget>
