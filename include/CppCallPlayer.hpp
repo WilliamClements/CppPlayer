@@ -27,6 +27,7 @@ public:
    }
    void playbackCppCalls(fs::path filepath, std::shared_ptr<ITrackable> pIMain)
    {
+      cppCallStream().startStreaming();
       cppCallStream().io().playbackAll(
          filepath
          , [this, pIMain]()
