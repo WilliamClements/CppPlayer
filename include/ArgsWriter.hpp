@@ -8,10 +8,6 @@
 
 #include <ITrackable.hpp>
 
-class CppCallMapEntry;
-class CppCallStream;
-class PropertyId;
-
 class ArgsWriter final
 {
    CppCallStream&                            m_callStream;
@@ -99,10 +95,6 @@ public:
    ArgsWriter& pushArg(std::shared_ptr<const ITrackable> pTrackable)
    {
       return pushArg(pTrackable ? pushTrackable(pTrackable) : "nullptr");
-   }
-   ArgsWriter& pushArg(const PropertyId& id)
-   {
-      return pushArg(id.getAbsolutePath());
    }
    ArgsWriter& pushArg(const std::vector<std::string>& vStrings)
    {

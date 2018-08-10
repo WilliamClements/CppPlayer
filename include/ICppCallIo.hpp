@@ -32,9 +32,9 @@ public:
    virtual void                setFileHeader(CppCallFileHeader) = 0;
 
    virtual void                startRecording() = 0;
-   virtual void                finishRecording(std::string outputfilename) = 0;
+   virtual void                finishRecording(fs::path outputfilepath) = 0;
 
-   virtual void                playbackAll(std::string inputFileName, OnStartPlaying cb, PlayerOfOneCall playerOfOne) = 0;
+   virtual void                playbackAll(fs::path inputFileName, OnStartPlaying cb, PlayerOfOneCall playerOfOne) = 0;
 
    virtual void                pushHeader() = 0;
    virtual void                pushInt(int64_t) = 0;

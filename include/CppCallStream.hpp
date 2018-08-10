@@ -37,11 +37,11 @@ public:
    ~CppCallStream()
    {}
 
-   ICppCallIo& io()                         { return *m_io.get(); }
-   Aliased& aliased()                       { return m_aliased; }
-   AliasedURNs& aliasedURNs()               { return m_aliasedURNs; }
-   uint64_t& callsCounter()                 { return m_u64CallsCounter; }
-   std::string& mainId()                    { return m_mainId; }
+   ICppCallIo& io()                  { return *m_io.get(); }
+   Aliased& aliased()                { return m_aliased; }
+   AliasedURNs& aliasedURNs()        { return m_aliasedURNs; }
+   uint64_t& callsCounter()          { return m_u64CallsCounter; }
+   std::string& mainId()             { return m_mainId; }
 
 public:
    void startRecording()
@@ -49,18 +49,19 @@ public:
       m_fileheader.m_startTime = std::chrono::system_clock::now();
       m_io->startRecording();
    }
-   void finishRecording(std::string mainId, std::string outputfilename)
+   void finishRecording(std::string mainId, fs::path outputfilepath)
    {
       m_fileheader.m_finishTime = std::chrono::system_clock::now();
       m_fileheader.m_numCppCallsRecorded = callsCounter();
       m_fileheader.m_mainId = mainId;
       m_io->setFileHeader(m_fileheader);
-      m_io->finishRecording(outputfilename);
+      m_io->finishRecording(outputfilepath);
    }
    void onStartPlayback()
    {
-      m_fileheader.m_startTime = std::chrono::system_clock::now();
-      m_io->startRecording();
+      m_fileheader = m_io->getFileHeader();
+      m_u64CppCallsPreRecorded = m_fileheader.m_numCppCallsRecorded;
+      m_mainId = m_fileheader.m_mainId;
    }
    void finishPlayback()
    {}
@@ -110,7 +111,7 @@ public:
 
 void fail(CppCallError err, const CppCallMapEntry* pEntry)
 {
-   fail(err, pEntry->api());
+   fail(err, pEntry ? pEntry->api() : "no entrypoint");
 }
 
 void fail(CppCallError err, std::string ssId)

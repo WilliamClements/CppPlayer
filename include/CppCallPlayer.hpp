@@ -6,34 +6,32 @@
 
 // CppCallPlayer.hpp
 
-#include <CppCallPlayerInterface.hpp>
-#include <IMain.hpp>
-#include <ITrackable.hpp>
 #include <ArgsReader.hpp>
+#include <CppCallPlayerInterface.hpp>
+#include <CppCallStream.hpp>
+#include <ITrackable.hpp>
 
-class CppCallStream;
-class GUIDvalue;
 class IMain;
-class ITrackable;
 
 class CppCallPlayer final
 {
-   std::unique_ptr<CppCallStream> m_callStream;
-   std::shared_ptr<IMain>     m_pIMain;
+   mutable CppCallStream m_callStream;
 
 public:
+   CppCallPlayer()
+   {}
+     
    CppCallStream& cppCallStream() const
    {
-      return *m_callStream.get();
+      return m_callStream;
    }
-   void playbackCppCalls(std::string filename, ITrackableCallback uiLoginFun)
+   void playbackCppCalls(fs::path filepath, std::shared_ptr<ITrackable> pIMain)
    {
-      initializeForPlayback(uiLoginFun);
       cppCallStream().io().playbackAll(
-         filename
-         , [this]()
+         filepath
+         , [this, pIMain]()
       {
-         this->startPlayback();
+         this->startPlayback(pIMain);
       }
          , [this](int nFields)
       {
@@ -48,29 +46,18 @@ public:
       // execute
       ar.callCpp(nFields);
    }
-   void initializeForPlayback(ITrackableCallback uiLoginFun)
-   {
-      m_callStream = std::make_unique<CppCallStream>();
-      ITrackable::Recorder = CppCallRecordingManager();
-      m_pIMain = std::make_shared<IMain>();
-      // WOX m_pIMain->registerLoginCallback(uiLoginFun);
-   }
 
-   void startPlayback()
+   void startPlayback(std::shared_ptr<ITrackable> pIMain)
    {
-#if WOX
       cppCallStream().onStartPlayback();
-      cppCallStream().aliased()[cppCallStream().mainId()] = m_pIMain;
-#endif
+      cppCallStream().aliased()[cppCallStream().mainId()] = pIMain;
    }
    void finishPlayback()
    {
       ITrackable::reportInfo(ERR_SUCCESS, "entering finishPlayback .. destroy m_PlaybackState\n");
       cppCallStream().finishPlayback();
       ITrackable::reportInfo(ERR_SUCCESS, "continuing finishPlayback .. destroy cppCallStream()\n");
-      m_callStream.reset();
       ITrackable::reportInfo(ERR_SUCCESS, "exited finishPlayback\n");
-      m_pIMain.reset();
    }
 
    void execute(std::string);
