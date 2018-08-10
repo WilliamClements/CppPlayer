@@ -31,7 +31,7 @@ public:
       : m_u64CallsCounter()
       , m_u64CppCallsPreRecorded()
       , m_mainId()
-      , m_io(makeIo())
+      , m_io()
    {}
 
    ~CppCallStream()
@@ -44,18 +44,26 @@ public:
    std::string& mainId()             { return m_mainId; }
 
 public:
+   void startStreaming()
+   {
+      m_io = makeIo();
+   }
    void startRecording()
    {
+      startStreaming();
       m_fileheader.m_startTime = std::chrono::system_clock::now();
       m_io->startRecording();
    }
    void finishRecording(std::string mainId, fs::path outputfilepath)
    {
-      m_fileheader.m_finishTime = std::chrono::system_clock::now();
-      m_fileheader.m_numCppCallsRecorded = callsCounter();
-      m_fileheader.m_mainId = mainId;
-      m_io->setFileHeader(m_fileheader);
-      m_io->finishRecording(outputfilepath);
+      if (m_io)
+      {
+         m_fileheader.m_finishTime = std::chrono::system_clock::now();
+         m_fileheader.m_numCppCallsRecorded = callsCounter();
+         m_fileheader.m_mainId = mainId;
+         m_io->setFileHeader(m_fileheader);
+         m_io->finishRecording(outputfilepath);
+      }
    }
    void onStartPlayback()
    {
