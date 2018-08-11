@@ -6,7 +6,10 @@
 
 // ArgsWriter.hpp
 
-#include <ITrackable.hpp>
+#include <CppCallStream.hpp>
+// WOX #include <ITrackable.hpp>
+
+class ITrackable;
 
 class ArgsWriter final
 {
@@ -55,11 +58,6 @@ public:
       pushArgs(api(), getThisTarget());
       return *this;
    }
-   std::string pushTrackable(std::shared_ptr<const ITrackable> pTrackable)
-   {
-      // Recording guid to identify object just created
-      return pTrackable->m_objectKey;
-   }
 
    // Record each argument according to its type
    ArgsWriter& pushArg(int64_t nIntItem)
@@ -94,7 +92,7 @@ public:
    }
    ArgsWriter& pushArg(std::shared_ptr<const ITrackable> pTrackable)
    {
-      return pushArg(pTrackable ? pushTrackable(pTrackable) : "nullptr");
+      return pushArg(/* pTrackable ? pTrackable->m_objectKey : */ "nullptr");
    }
    ArgsWriter& pushArg(const std::vector<std::string>& vStrings)
    {

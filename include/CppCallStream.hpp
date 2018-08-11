@@ -4,9 +4,10 @@
 
 #pragma once
 
+#include <CppCallMap.hpp>
+#include <CppCallIO_Json.hpp>
 #include <GUIDvalue.hpp>
 #include <ICppCallIo.hpp>
-#include <CppCallIO_Json.hpp>
 #include <unordered_map>
 
 class ITrackable;
@@ -44,6 +45,10 @@ public:
    std::string& mainId()             { return m_mainId; }
 
 public:
+   bool streaming() const
+   {
+      return !!m_io;
+   }
    void startStreaming()
    {
       m_io = makeIo();
@@ -116,45 +121,3 @@ public:
       return ret;
    }
 };
-
-void fail(CppCallError err, const CppCallMapEntry* pEntry)
-{
-   fail(err, pEntry ? pEntry->api() : "no entrypoint");
-}
-
-void fail(CppCallError err, std::string ssId)
-{
-   std::string base = ssId + "/";
-   switch (err)
-   {
-   case CppCallError_UnequalReturnResult:
-      throw std::logic_error(base + "result of operation different from recording to playback");
-   case CppCallError_DuplicateAPINames:
-      throw std::logic_error(base + "only one entry should be registered per apiname");
-   case CppCallError_NoSuchAPIName:
-      throw std::logic_error(base + "api name lookup failed, did you forget to register a entry for it?");
-   case CppCallError_FileCannotBeCreated:
-      throw std::logic_error(base + "recording file could not be created");
-   case CppCallError_FileDoesNotExist:
-      throw std::logic_error(base + "playback file does not exist");
-   case CppCallError_NoSuchTarget:
-      throw std::logic_error(base + "lookup target failed; i.e. target referenced before it was created");
-   case CppCallError_NoSuchTrackable:
-      throw std::logic_error(base + "lookup trackable failed; i.e. trackable referenced before it was created");
-   case CppCallError_WrongNumberOfFields:
-      throw std::logic_error(base + "wrong number of fields pushed or popped");
-   case CppCallError_InvalidPath:
-      throw std::logic_error(base + "path cannot be correct");
-   case CppCallError_NoSuchURN:
-      throw std::logic_error(base + "lookup URN failed; i.e. URN referenced before it was created");
-   case CppCallError_UnmatchedFulfillVersusReserve:
-      throw std::logic_error(base + "tracking mismatch");
-   case CppCallError_TrackableMustBeNull:
-      throw std::logic_error(base + "non-NULL trackable unexpected");
-      // catch all...keep it last
-   case CppCallError_OutOfSequence:
-      throw std::logic_error(base + "playback sequence did not match recording");
-   default:
-      throw std::logic_error(base + "please add a description for this error");
-   }
-}

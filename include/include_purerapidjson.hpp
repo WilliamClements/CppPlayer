@@ -5,6 +5,7 @@
 #pragma once
 
 #include <Aliases.hpp>
+#include <CppCallError.hpp>
 
 #undef min
 #undef max
@@ -64,7 +65,7 @@ namespace JSON
    // These are homegrown utilities
 
    // Writes string representation of the JSON document to a file.
-   void stringify(const Document& dom, fs::path filepath)
+   inline void stringify(const Document& dom, fs::path filepath)
    {
       FILE* fp = nullptr;
       std::string filename = filepath.parent_path().generic_string();
@@ -79,7 +80,7 @@ namespace JSON
       fclose(fp);
    }
    // Reads string representation from file and populates JSON document. 
-   void parse(Document& dom, fs::path filepath)
+   inline void parse(Document& dom, fs::path filepath)
    {
       FILE* fp = nullptr;
       std::string filename = filepath.parent_path().generic_string();

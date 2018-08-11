@@ -35,8 +35,6 @@ public:
    ~CppCallMapEntry()
    {}
 
-
-
    std::string api() const
    {
       return m_api;
@@ -61,6 +59,17 @@ public:
       return numArgs() + 2 + (returnsValue() ? 1 : 0);
    }
 };
+
+inline void failmap(CppCallError err, const CppCallMapEntry* pEntry)
+{
+   fail(err, pEntry ? pEntry->api() : std::string{ "no entrypoint" });
+}
+
+inline void failUnlessPredicate(bool bPredicate, CppCallError err, const CppCallMapEntry* pEntry = nullptr)
+{
+   if (!bPredicate)
+      failmap(err, pEntry);
+}
 
 using CppCallMapType
    = std::unordered_map<std::string, std::unique_ptr<CppCallMapEntry>, std::hash<std::string>>;
@@ -92,9 +101,8 @@ public:
    }
 };
 
-CppCallMap& cppCallMap()
+inline CppCallMap& cppCallMap()
 {
-   static CppCallMap s_CppCallMap;
-   return s_CppCallMap;
+   static CppCallMap m_callmap;
+   return m_callmap;
 }
-

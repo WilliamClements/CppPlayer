@@ -7,13 +7,14 @@
 // CppCallPlayer.hpp
 
 #include <ArgsReader.hpp>
+#include <CppCallError.hpp>
 #include <CppCallPlayerInterface.hpp>
 #include <CppCallStream.hpp>
 #include <ITrackable.hpp>
 
 class IMain;
 
-class CppCallPlayer final
+class CppCallPlayer final : public CppCallPlayerInterface
 {
    mutable CppCallStream m_callStream;
 
@@ -55,10 +56,10 @@ public:
    }
    void finishPlayback()
    {
-      ITrackable::reportInfo(ERR_SUCCESS, "entering finishPlayback .. destroy m_PlaybackState\n");
+      CppCallInfo::reportInfo(ERR_SUCCESS, "entering finishPlayback .. destroy m_PlaybackState\n");
       cppCallStream().finishPlayback();
-      ITrackable::reportInfo(ERR_SUCCESS, "continuing finishPlayback .. destroy cppCallStream()\n");
-      ITrackable::reportInfo(ERR_SUCCESS, "exited finishPlayback\n");
+      CppCallInfo::reportInfo(ERR_SUCCESS, "continuing finishPlayback .. destroy cppCallStream()\n");
+      CppCallInfo::reportInfo(ERR_SUCCESS, "exited finishPlayback\n");
    }
 
    void execute(std::string);
