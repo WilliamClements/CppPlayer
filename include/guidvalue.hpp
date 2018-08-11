@@ -1,5 +1,6 @@
 #pragma once
 
+#if !PERSISTENCEDB_DLL
 typedef struct _GUID {
    unsigned long  Data1;
    unsigned short Data2;
@@ -77,4 +78,5 @@ struct GuidHasher
    }
 };
 
+#endif
 #endif

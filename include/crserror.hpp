@@ -1,5 +1,7 @@
 #pragma once
 
+#if !PERSISTENCEDB_DLL
+
 enum Err
 {
    ERR_SUCCESS = 0
@@ -166,3 +168,5 @@ enum Err
    ,  ERR_ALERTED
    // Add new error codes above this line
 };
+
+#endif

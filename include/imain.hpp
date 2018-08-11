@@ -17,19 +17,25 @@ enum IMain_Start_Flags
 
 class IMain : public ITrackable
 {
-   CppCallRecorder         Recorder;
    CppCallPlayer           Player;
+   CppCallRecorder         Recorder;
    fs::path                FilePath;
    unsigned int            StartFlags;
 
    // Construction
 public:
    IMain()
-   {}
-   virtual ~IMain()
-   {}
+   {
+      pplayer() = &Player;
+      precorder() = &Recorder;
+   }
+   virtual ~IMain() = 0
+   {
+      pplayer() = nullptr;
+      precorder() = nullptr;
+   }
 
-   void start(unsigned int nFlags, std::string filename)
+   void startCpp(unsigned int nFlags, std::string filename)
    {
       FilePath = filename;
       bool bExists = fs::exists(FilePath);
@@ -44,25 +50,9 @@ public:
          Player.playbackCppCalls(FilePath, shared_from_this());
       }
    }
-   void finish()
+   void finishCpp()
    {
       Recorder.finishRecording();
       Player.finishPlayback();
    }
 };
-
-std::shared_ptr<IMain> getMain()
-{
-   static auto imain = std::make_shared<IMain>();
-   return imain;
-}
-
-void cppCallFramework_start(unsigned int nFlags, std::string filename)
-{
-   getMain()->start(nFlags, filename);
-}
-
-void cppCallFramework_finish()
-{
-   getMain()->finish();
-}

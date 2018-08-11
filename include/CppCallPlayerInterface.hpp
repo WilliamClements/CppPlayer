@@ -6,6 +6,25 @@
 
 // CppCallPlayerInterface.hpp
 
-#include <CRSError.hpp>
+#include <CppCallStream.hpp>
 
-void playbackCppCalls(std::string filename, std::function<Err()> uiLoginFun = nullptr);
+class CppCallPlayerInterface
+{
+   mutable CppCallStream                  m_callStream;
+
+public:
+   CppCallPlayerInterface()
+   {}
+   virtual ~CppCallPlayerInterface() = 0
+   {}
+
+   CppCallStream& cppCallStream() const
+   {
+      return m_callStream;
+   }
+   bool streaming() const
+   {
+      return cppCallStream().streaming();
+   }
+};
+
