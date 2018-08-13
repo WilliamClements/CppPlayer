@@ -3,6 +3,9 @@
  */
 
 #pragma once
+#pragma message("WOX -> include_purerapidjson")
+
+// include_purerapidjson.hpp
 
 #include <Aliases.hpp>
 #include <CppCallError.hpp>
@@ -69,6 +72,7 @@ namespace JSON
    {
       FILE* fp = nullptr;
       std::string filename = filepath.parent_path().generic_string();
+      filename += "\\";
       filename += filepath.filename().generic_string();
       errno_t bad = fopen_s(&fp, filename.c_str(), "wb"); // non-Windows use "w"
       failUnlessPredicate(!bad, CppCallError_FileCannotBeCreated, filename);
@@ -84,6 +88,7 @@ namespace JSON
    {
       FILE* fp = nullptr;
       std::string filename = filepath.parent_path().generic_string();
+      filename += "\\";
       filename += filepath.filename().generic_string();
       errno_t bad = fopen_s(&fp, filename.c_str(), "rb"); // non-Windows use "r"
       failUnlessPredicate(!bad, CppCallError_FileDoesNotExist, filename);
@@ -94,3 +99,5 @@ namespace JSON
       fclose(fp);
    }
 }
+
+#pragma message("WOX <- include_purerapidjson")

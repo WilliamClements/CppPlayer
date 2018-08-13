@@ -3,6 +3,7 @@
  */
 
 #pragma once
+#pragma message("WOX -> CppCallRecorder")
 
 // CppCallRecorder.hpp
 
@@ -10,7 +11,6 @@
 #include <ArgsWriter.hpp>
 #include <CppCallRecorderInterface.hpp>
 #include <CppCallStream.hpp>
-#include <GUIDvalue.hpp>
 
 class CppCallRecorder final : public CppCallRecorderInterface
 {
@@ -30,9 +30,9 @@ public:
       m_outputfilepath = outputfilepath;
       cppCallStream().startRecording();
    }
-   void finishRecording()
+   void finishRecording(std::string mainId)
    {
-      cppCallStream().finishRecording(cppCallStream().mainId(), m_outputfilepath);
+      cppCallStream().finishRecording(mainId, m_outputfilepath);
    }
 };
 
@@ -65,3 +65,5 @@ public:
       return m_pEntry->api();
    }
 };
+
+#pragma message("WOX <- CppCallRecorder")

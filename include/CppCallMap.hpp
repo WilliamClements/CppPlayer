@@ -3,6 +3,7 @@
  */
 
 #pragma once
+#pragma message("WOX -> CppCallMap")
 
 // CppCallMap.hpp
 
@@ -106,3 +107,5 @@ inline CppCallMap& cppCallMap()
    static CppCallMap m_callmap;
    return m_callmap;
 }
+
+#pragma message("WOX <- CppCallMap")

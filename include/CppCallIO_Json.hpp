@@ -3,6 +3,7 @@
 */
 
 #pragma once
+#pragma message("WOX -> CppCallIO_Json")
 
 // CppCallIO_Json.hpp
 
@@ -204,3 +205,10 @@ private:
       return ss;
    }
 };
+
+std::unique_ptr<ICppCallIo> makeIo()
+{
+   return std::make_unique<CppCallIO_Json>();
+}
+
+#pragma message("WOX <- CppCallIO_Json")

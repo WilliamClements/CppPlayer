@@ -3,10 +3,11 @@
  */
 
 #pragma once
+#pragma message("WOX -> CppCallStream")
+
+// CppCallStream.hpp
 
 #include <CppCallMap.hpp>
-#include <CppCallIO_Json.hpp>
-#include <GUIDvalue.hpp>
 #include <ICppCallIo.hpp>
 #include <unordered_map>
 
@@ -16,6 +17,8 @@ using Aliased
    = std::unordered_map<std::string, std::shared_ptr<ITrackable>, std::hash<std::string>>;
 using AliasedURNs
    = std::unordered_map<std::string, std::string, std::hash<std::string>>;
+
+extern std::unique_ptr<ICppCallIo> makeIo();
 
 class CppCallStream final
 {
@@ -78,10 +81,6 @@ public:
    }
    void finishPlayback()
    {}
-   static std::unique_ptr<ICppCallIo> makeIo()
-   {
-      return std::make_unique<CppCallIO_Json>();
-   }
    std::string breakStringVector(const std::vector<std::string>& vs)
    {
       std::string ret = "{";
@@ -121,3 +120,5 @@ public:
       return ret;
    }
 };
+
+#pragma message("WOX <- CppCallStream")

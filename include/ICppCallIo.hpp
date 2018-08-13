@@ -3,6 +3,9 @@
  */
 
 #pragma once
+#pragma message("WOX -> ICppCallIo")
+
+// ICppCallIo.hpp
 
 #include <Aliases.hpp>
 #include <chrono>
@@ -48,3 +51,5 @@ public:
    virtual std::string         popString() const = 0;
    virtual double              popDouble() const = 0;
 };
+
+#pragma message("WOX <- ICppCallIo")

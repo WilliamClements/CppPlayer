@@ -3,6 +3,7 @@
  */
 
 #pragma once
+#pragma message("WOX -> CppCallRecorderInterface")
 
 // CppCallRecorderInterface.hpp
 
@@ -40,3 +41,5 @@ public:
       aw.pushCall();
    }
 };
+
+#pragma message("WOX <- CppCallRecorderInterface")
