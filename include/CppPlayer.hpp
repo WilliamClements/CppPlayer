@@ -7,9 +7,8 @@
 // CppPlayer.hpp
 
 #include "ArgsReader.hpp"
-#include "CppCallError.hpp"
+#include "Assertions.hpp"
 #include "IPlayer.hpp"
-#include "CppCallStream.hpp"
 #include "ITrackable.hpp"
 
 class CppPlayer final : public IPlayer
@@ -20,8 +19,8 @@ public:
      
    void playbackCppCalls(fs::path filepath, std::shared_ptr<ITrackable> pIMain)
    {
-      cppCallStream().startStreaming();
-      cppCallStream().io().playbackAll(
+      callStream().startStreaming();
+      callStream().io().playbackAll(
          filepath
          , [this, pIMain]()
       {
@@ -34,7 +33,7 @@ public:
    }
    void playbackOne(int nFields)
    {
-      ArgsReader ar(cppCallStream());
+      ArgsReader ar(callStream());
       // scan
       ar.popHeader();
       // execute
@@ -43,14 +42,14 @@ public:
 
    void startPlayback(std::shared_ptr<ITrackable> pIMain)
    {
-      cppCallStream().onStartPlayback();
-      cppCallStream().aliased()[cppCallStream().mainId()] = pIMain;
+      callStream().onStartPlayback();
+      callStream().aliased()[callStream().mainId()] = pIMain;
    }
    void finishPlayback()
    {
-      CppCallInfo::reportInfo(ERR_SUCCESS, "entering finishPlayback .. destroy m_PlaybackState\n");
-      cppCallStream().finishPlayback();
-      CppCallInfo::reportInfo(ERR_SUCCESS, "continuing finishPlayback .. destroy cppCallStream()\n");
-      CppCallInfo::reportInfo(ERR_SUCCESS, "exited finishPlayback\n");
+      CppCallInfo::reportInfo(Err(0), "entering finishPlayback .. destroy m_PlaybackState\n");
+      callStream().finishPlayback();
+      CppCallInfo::reportInfo(Err(0), "continuing finishPlayback .. destroy callStream()\n");
+      CppCallInfo::reportInfo(Err(0), "exited finishPlayback\n");
    }
 };

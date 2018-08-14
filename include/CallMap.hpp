@@ -4,9 +4,9 @@
 
 #pragma once
 
-// CppCallMap.hpp
+// CallMap.hpp
 
-#include "CppCallError.hpp"
+#include "Assertions.hpp"
 #include <functional>
 #include <memory>
 #include <unordered_map>
@@ -18,7 +18,7 @@ class ArgsWriter;
 using PlaybackCall
    = std::function<void(const ArgsReader&)>;
 
-class  CppCallMapEntry
+class  CallMapEntry
 {
    std::string                         m_api;
    PlaybackCall                        m_call;
@@ -26,13 +26,13 @@ class  CppCallMapEntry
    int                                 m_numArgs;
 
 public:
-   explicit CppCallMapEntry(std::string api, PlaybackCall call, bool bReturnsValue, int numArgs)
+   explicit CallMapEntry(std::string api, PlaybackCall call, bool bReturnsValue, int numArgs)
       : m_api(api)
       , m_call(call)
       , m_bReturnsValue(bReturnsValue)
       , m_numArgs(numArgs)
    {}
-   ~CppCallMapEntry()
+   ~CallMapEntry()
    {}
 
    std::string api() const
@@ -60,49 +60,49 @@ public:
    }
 };
 
-inline void failmap(CppCallError err, const CppCallMapEntry* pEntry)
+inline void failmap(Assertions err, const CallMapEntry* pEntry)
 {
    fail(err, pEntry ? pEntry->api() : std::string{ "no entrypoint" });
 }
 
-inline void failUnlessPredicate(bool bPredicate, CppCallError err, const CppCallMapEntry* pEntry = nullptr)
+inline void failUnlessPredicate(bool bPredicate, Assertions err, const CallMapEntry* pEntry = nullptr)
 {
    if (!bPredicate)
       failmap(err, pEntry);
 }
 
-using CppCallMapType
-   = std::unordered_map<std::string, std::unique_ptr<CppCallMapEntry>, std::hash<std::string>>;
+using CallMapType
+   = std::unordered_map<std::string, std::unique_ptr<CallMapEntry>, std::hash<std::string>>;
 
-class CppCallMap final
+class CallMap final
 {
-   CppCallMapType              m_theMap;
+   CallMapType              m_theMap;
 
 public:
-   CppCallMap()
+   CallMap()
       : m_theMap()
    {}
-   ~CppCallMap()
+   ~CallMap()
    {}
 
-   CppCallMapEntry& emplaceMethod(std::unique_ptr<CppCallMapEntry> pEntry)
+   CallMapEntry& emplaceMethod(std::unique_ptr<CallMapEntry> pEntry)
    {
       auto result = m_theMap.emplace(pEntry->api(), std::move(pEntry));
       auto* pRet = (result.first->second).get();
-      failUnlessPredicate(result.second, CppCallError_DuplicateAPINames, pRet);
+      failUnlessPredicate(result.second, Assertions_DuplicateAPINames, pRet);
       return *pRet;
    }
 
-   CppCallMapEntry& lookupMethod(std::string apiname)
+   CallMapEntry& lookupMethod(std::string apiname)
    {
       auto findResult = m_theMap.find(apiname);
-      failUnlessPredicate(m_theMap.end() != findResult, CppCallError_NoSuchAPIName, apiname);
+      failUnlessPredicate(m_theMap.end() != findResult, Assertions_NoSuchAPIName, apiname);
       return *(findResult->second.get());
    }
 };
 
-inline CppCallMap& cppCallMap()
+inline CallMap& callMap()
 {
-   static CppCallMap m_callmap;
+   static CallMap m_callmap;
    return m_callmap;
 }

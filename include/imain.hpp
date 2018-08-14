@@ -6,10 +6,10 @@
 
 // IMain.hpp
 
-#include "NamespaceAliases.hpp"
-#include "CppRecorder.hpp"
 #include "CppPlayer.hpp"
+#include "CppRecorder.hpp"
 #include "ICallable.hpp"
+#include "NamespaceAliases.hpp"
 
 enum IMain_Start_Flags
 {
@@ -46,11 +46,11 @@ public:
    {
       failUnlessPredicate(
          !!(Do_Recording & StartFlags)
-         , CppCallError_StartFlagsProblem);
+         , Assertions_StartFlagsProblem);
 
       FilePath = filename;
       bool bExists = fs::exists(FilePath);
-      failUnlessPredicate(!bExists, CppCallError_FileCannotBeCreated);
+      failUnlessPredicate(!bExists, Assertions_FileCannotBeCreated);
 
       Recorder.startRecording(FilePath);
    }
@@ -58,11 +58,11 @@ public:
    {
       failUnlessPredicate(
          !!(Do_Playback & StartFlags)
-         , CppCallError_StartFlagsProblem);
+         , Assertions_StartFlagsProblem);
 
       FilePath = filename;
       bool bExists = fs::exists(FilePath);
-      failUnlessPredicate(bExists, CppCallError_FileDoesNotExist);
+      failUnlessPredicate(bExists, Assertions_FileDoesNotExist);
 
       Player.playbackCppCalls(FilePath, shared_from_this());
    }

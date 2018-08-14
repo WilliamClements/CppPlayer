@@ -6,11 +6,11 @@
 
 // IAgent.hpp
 
-#include "CppCallStream.hpp"
+#include "CallStream.hpp"
 
 class IAgent
 {
-   mutable CppCallStream                  m_callStream;
+   mutable CallStream                  m_callStream;
 
 public:
    IAgent()
@@ -18,12 +18,12 @@ public:
    virtual ~IAgent() = 0
    {}
 
-   CppCallStream& cppCallStream() const
+   CallStream& callStream() const
    {
       return m_callStream;
    }
    bool streaming() const
    {
-      return cppCallStream().streaming();
+      return callStream().streaming();
    }
 };

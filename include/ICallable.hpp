@@ -6,10 +6,10 @@
 
 // ICallable.hpp
 
+#include <functional>
 #include "IPlayer.hpp"
 #include "IRecorder.hpp"
 #include "ITrackable.hpp"
-#include <functional>
 
 enum
 {

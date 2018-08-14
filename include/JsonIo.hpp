@@ -6,7 +6,7 @@
 
 // JsonIo.hpp
 
-#include "CppCallError.hpp"
+#include "Assertions.hpp"
 #include "IIo.hpp"
 #include "NamespaceAliases.hpp"
 
@@ -85,7 +85,7 @@ public:
    ~JsonIo()
    {}
 
-   CppCallFileHeader getFileHeader() override
+   CppFileHeader getFileHeader() override
    {
       time_point dummyStart = std::chrono::system_clock::now();
       time_point dummyFinish = std::chrono::system_clock::now();
@@ -94,14 +94,14 @@ public:
 
       uint64_t llCalls = m_jsonHeader["Record Count"].GetInt64();
       std::string mainId = m_jsonHeader["Main"].GetString();
-      return CppCallFileHeader{ dummyStart, dummyFinish, llCalls, mainId };
+      return CppFileHeader{ dummyStart, dummyFinish, llCalls, mainId };
    }
-   void setFileHeader(CppCallFileHeader header) override
+   void setFileHeader(CppFileHeader header) override
    {
       rapidjson::Value startTime(formatTime(header.m_startTime), json_allocator());
       rapidjson::Value finishTime(formatTime(header.m_finishTime), json_allocator());
       rapidjson::Value numRecorded;
-      numRecorded.SetInt64(header.m_numCppCallsRecorded);
+      numRecorded.SetInt64(header.m_numCallsRecorded);
       rapidjson::Value mainId(header.m_mainId, json_allocator());
 
       m_dom["Header"].AddMember(rapidjson::Value("Start Time"), startTime, json_allocator());
@@ -230,7 +230,7 @@ public:
       filename += "\\";
       filename += filepath.filename().generic_string();
       errno_t bad = fopen_s(&fp, filename.c_str(), "wb"); // non-Windows use "w"
-      failUnlessPredicate(!bad, CppCallError_FileCannotBeCreated, filename);
+      failUnlessPredicate(!bad, Assertions_FileCannotBeCreated, filename);
       // good open, continue
       char writeBuffer[65536];
       rapidjson::FileWriteStream os(fp, writeBuffer, sizeof(writeBuffer));
@@ -246,7 +246,7 @@ public:
       filename += "\\";
       filename += filepath.filename().generic_string();
       errno_t bad = fopen_s(&fp, filename.c_str(), "rb"); // non-Windows use "r"
-      failUnlessPredicate(!bad, CppCallError_FileDoesNotExist, filename);
+      failUnlessPredicate(!bad, Assertions_FileDoesNotExist, filename);
       // good open, continue
       char readBuffer[65536];
       rapidjson::FileReadStream is(fp, readBuffer, sizeof(readBuffer));

@@ -4,9 +4,9 @@
 
 #pragma once
 
-// CppCallStream.hpp
+// CallStream.hpp
 
-#include "CppCallMap.hpp"
+#include "CallMap.hpp"
 #include "IIo.hpp"
 #include <unordered_map>
 
@@ -19,25 +19,25 @@ using AliasedURNs
 
 extern std::unique_ptr<IIo> makeIo();
 
-class CppCallStream final
+class CallStream final
 {
-   std::unique_ptr<IIo>       m_io;
-   CppCallFileHeader                 m_fileheader;
+   std::unique_ptr<IIo>              m_io;
+   CppFileHeader                     m_fileheader;
    Aliased                           m_aliased;
    AliasedURNs                       m_aliasedURNs;
    uint64_t                          m_u64CallsCounter;
-   uint64_t                          m_u64CppCallsPreRecorded;
+   uint64_t                          m_u64CallsPreRecorded;
    std::string                       m_mainId;
 
 public:
-   CppCallStream()
+   CallStream()
       : m_u64CallsCounter()
-      , m_u64CppCallsPreRecorded()
+      , m_u64CallsPreRecorded()
       , m_mainId()
       , m_io()
    {}
 
-   ~CppCallStream()
+   ~CallStream()
    {}
 
    IIo& io()                  { return *m_io.get(); }
@@ -66,7 +66,7 @@ public:
       if (m_io)
       {
          m_fileheader.m_finishTime = std::chrono::system_clock::now();
-         m_fileheader.m_numCppCallsRecorded = callsCounter();
+         m_fileheader.m_numCallsRecorded = callsCounter();
          m_fileheader.m_mainId = mainId;
          m_io->setFileHeader(m_fileheader);
          m_io->finishRecording(outputfilepath);
@@ -75,7 +75,7 @@ public:
    void onStartPlayback()
    {
       m_fileheader = m_io->getFileHeader();
-      m_u64CppCallsPreRecorded = m_fileheader.m_numCppCallsRecorded;
+      m_u64CallsPreRecorded = m_fileheader.m_numCallsRecorded;
       m_mainId = m_fileheader.m_mainId;
    }
    void finishPlayback()

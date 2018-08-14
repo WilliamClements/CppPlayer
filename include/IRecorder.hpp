@@ -6,9 +6,9 @@
 
 // IRecorder.hpp
 
-#include "NamespaceAliases.hpp"
 #include "ArgsWriter.hpp"
 #include "IAgent.hpp"
+#include "NamespaceAliases.hpp"
 
 class IRecorder : public IAgent
 {
@@ -21,7 +21,7 @@ public:
    template<class ITarget, typename... Args>
    void recordCppCall(std::string methodname, std::shared_ptr<const ITarget> pTrackable, Args... args)
    {
-      ArgsWriter aw(cppCallStream());
+      ArgsWriter aw(callStream());
       // Push the api name, then the object
       aw.pushHeader(methodname, pTrackable);
       // Push the arguments, in order
