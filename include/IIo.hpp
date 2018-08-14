@@ -6,16 +6,13 @@
 
 // IIo.hpp
 
-#include <NamespaceAliases.hpp>
+#include "NamespaceAliases.hpp"
 #include <chrono>
 #include <functional>
 
-using time_point
-   = std::chrono::system_clock::time_point;
-using PlayerOfOneCall
-   = std::function<void(int nFields)>;
-using OnStartPlaying
-   = std::function<void()>;
+using time_point = std::chrono::system_clock::time_point;
+using PlayerOfOneCall = std::function<void(int nFields)>;
+using OnStartPlaying = std::function<void()>;
 
 struct CppCallFileHeader
 {
@@ -29,7 +26,8 @@ struct CppCallFileHeader
 class IIo
 {
 public:
-   virtual ~IIo()       {}
+   virtual ~IIo() = 0
+   {}
 
    virtual CppCallFileHeader   getFileHeader() = 0;
    virtual void                setFileHeader(CppCallFileHeader) = 0;

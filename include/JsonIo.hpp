@@ -6,9 +6,9 @@
 
 // JsonIo.hpp
 
-#include <CppCallError.hpp>
-#include <IIo.hpp>
-#include <NamespaceAliases.hpp>
+#include "CppCallError.hpp"
+#include "IIo.hpp"
+#include "NamespaceAliases.hpp"
 
 #undef min
 #undef max
@@ -54,11 +54,11 @@ class JsonIo final : public IIo
    rapidjson::Value                 m_jsonBody;
    rapidjson::Value                 m_vCalls;
    rapidjson::Value                 m_currentCall;
-   int64_t                     m_callCounter;
-   std::unique_ptr<PlayData>   m_oPlayData;
+   int64_t                          m_callCounter;
+   std::unique_ptr<PlayData>        m_oPlayData;
 
 private:
-   PlayData & playData() const
+   auto& playData() const
    {
       return *m_oPlayData.get();
    }
@@ -112,7 +112,7 @@ public:
    void startRecording() override
    {
       // BTW I tried Reserving a low number to make sure array relocation was not a problem
-      // OTOH I always suppress RepoRequestMinder separate thread if recording
+      // Be aware.
       m_vCalls.Reserve(8192, json_allocator());
 
       // Use temporaries. AddMember eats both of its arguments.

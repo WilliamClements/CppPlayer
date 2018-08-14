@@ -6,7 +6,7 @@
 
 // IPlayer.hpp
 
-#include <IAgent.hpp>
+#include "IAgent.hpp"
 
 class IPlayer : public IAgent
 {

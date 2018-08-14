@@ -6,26 +6,18 @@
 
 // CppPlayer.hpp
 
-#include <ArgsReader.hpp>
-#include <CppCallError.hpp>
-#include <IPlayer.hpp>
-#include <CppCallStream.hpp>
-#include <ITrackable.hpp>
-
-class IMain;
+#include "ArgsReader.hpp"
+#include "CppCallError.hpp"
+#include "IPlayer.hpp"
+#include "CppCallStream.hpp"
+#include "ITrackable.hpp"
 
 class CppPlayer final : public IPlayer
 {
-   mutable CppCallStream m_callStream;
-
 public:
    CppPlayer()
    {}
      
-   CppCallStream& cppCallStream() const
-   {
-      return m_callStream;
-   }
    void playbackCppCalls(fs::path filepath, std::shared_ptr<ITrackable> pIMain)
    {
       cppCallStream().startStreaming();
@@ -61,6 +53,4 @@ public:
       CppCallInfo::reportInfo(ERR_SUCCESS, "continuing finishPlayback .. destroy cppCallStream()\n");
       CppCallInfo::reportInfo(ERR_SUCCESS, "exited finishPlayback\n");
    }
-
-   void execute(std::string);
 };

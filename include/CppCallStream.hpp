@@ -6,8 +6,8 @@
 
 // CppCallStream.hpp
 
-#include <CppCallMap.hpp>
-#include <IIo.hpp>
+#include "CppCallMap.hpp"
+#include "IIo.hpp"
 #include <unordered_map>
 
 class ITrackable;

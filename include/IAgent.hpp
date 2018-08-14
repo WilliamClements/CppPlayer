@@ -6,7 +6,7 @@
 
 // IAgent.hpp
 
-#include <CppCallStream.hpp>
+#include "CppCallStream.hpp"
 
 class IAgent
 {

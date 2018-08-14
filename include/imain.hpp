@@ -6,10 +6,10 @@
 
 // IMain.hpp
 
-#include <NamespaceAliases.hpp>
-#include <CppRecorder.hpp>
-#include <CppPlayer.hpp>
-#include <ICallable.hpp>
+#include "NamespaceAliases.hpp"
+#include "CppRecorder.hpp"
+#include "CppPlayer.hpp"
+#include "ICallable.hpp"
 
 enum IMain_Start_Flags
 {
