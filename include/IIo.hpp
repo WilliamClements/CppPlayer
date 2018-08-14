@@ -4,9 +4,9 @@
 
 #pragma once
 
-// ICppCallIo.hpp
+// IIo.hpp
 
-#include <Aliases.hpp>
+#include <NamespaceAliases.hpp>
 #include <chrono>
 #include <functional>
 
@@ -26,10 +26,10 @@ struct CppCallFileHeader
 };
 
 // Interface for the CppCallStreams to read and write to files; e.g. via JSON
-class ICppCallIo
+class IIo
 {
 public:
-   virtual ~ICppCallIo()       {}
+   virtual ~IIo()       {}
 
    virtual CppCallFileHeader   getFileHeader() = 0;
    virtual void                setFileHeader(CppCallFileHeader) = 0;

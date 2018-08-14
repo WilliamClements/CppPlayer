@@ -6,7 +6,7 @@
 
 // CppRecorder.hpp
 
-#include <Aliases.hpp>
+#include <NamespaceAliases.hpp>
 #include <ArgsWriter.hpp>
 #include <IRecorder.hpp>
 #include <CppCallStream.hpp>

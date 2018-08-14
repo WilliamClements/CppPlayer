@@ -7,7 +7,7 @@
 // CppCallStream.hpp
 
 #include <CppCallMap.hpp>
-#include <ICppCallIo.hpp>
+#include <IIo.hpp>
 #include <unordered_map>
 
 class ITrackable;
@@ -17,11 +17,11 @@ using Aliased
 using AliasedURNs
    = std::unordered_map<std::string, std::string, std::hash<std::string>>;
 
-extern std::unique_ptr<ICppCallIo> makeIo();
+extern std::unique_ptr<IIo> makeIo();
 
 class CppCallStream final
 {
-   std::unique_ptr<ICppCallIo>       m_io;
+   std::unique_ptr<IIo>       m_io;
    CppCallFileHeader                 m_fileheader;
    Aliased                           m_aliased;
    AliasedURNs                       m_aliasedURNs;
@@ -40,7 +40,7 @@ public:
    ~CppCallStream()
    {}
 
-   ICppCallIo& io()                  { return *m_io.get(); }
+   IIo& io()                  { return *m_io.get(); }
    Aliased& aliased()                { return m_aliased; }
    AliasedURNs& aliasedURNs()        { return m_aliasedURNs; }
    uint64_t& callsCounter()          { return m_u64CallsCounter; }

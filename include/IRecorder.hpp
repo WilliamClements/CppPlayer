@@ -6,7 +6,7 @@
 
 // IRecorder.hpp
 
-#include <Aliases.hpp>
+#include <NamespaceAliases.hpp>
 #include <ArgsWriter.hpp>
 #include <IAgent.hpp>
 

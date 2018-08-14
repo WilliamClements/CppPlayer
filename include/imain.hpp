@@ -6,7 +6,7 @@
 
 // IMain.hpp
 
-#include <Aliases.hpp>
+#include <NamespaceAliases.hpp>
 #include <CppRecorder.hpp>
 #include <CppPlayer.hpp>
 #include <ICallable.hpp>
