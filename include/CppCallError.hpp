@@ -3,8 +3,9 @@
  */
 
 #pragma once
+#pragma message("WOX -> CppCallError")
 
- // CppCallError.hpp
+// CppCallError.hpp
 
 #if !PERSISTENCEDB_DLL
 #include <CRSerror.hpp>
@@ -19,6 +20,7 @@ enum CppCallError
    CppCallError_UnequalReturnResult
    , CppCallError_DuplicateAPINames
    , CppCallError_NoSuchAPIName
+   , CppCallError_StartFlagsProblem
    , CppCallError_FileCannotBeCreated
    , CppCallError_FileDoesNotExist
    , CppCallError_NoSuchTarget
@@ -94,7 +96,7 @@ public:
       }
       else
       {
-         reportError(operation, sException);
+         reportError(operation, *sException);
       }
    }
    inline void static reportError(const char* operation, const std::exception& error)
@@ -107,3 +109,5 @@ public:
       reportInfo(ERR_FAILURE, ss);
    }
 };
+
+#pragma message("WOX <- CppCallError")

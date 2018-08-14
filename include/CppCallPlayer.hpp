@@ -3,6 +3,7 @@
  */
 
 #pragma once
+#pragma message("WOX -> CppCallPlayer")
 
 // CppCallPlayer.hpp
 
@@ -64,3 +65,5 @@ public:
 
    void execute(std::string);
 };
+
+#pragma message("WOX <- CppCallPlayer")

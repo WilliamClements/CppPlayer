@@ -3,10 +3,14 @@
  */
 
 #pragma once
+#pragma message("WOX -> IMain")
+
+// IMain.hpp
 
 #include <Aliases.hpp>
 #include <CppCallRecorder.hpp>
 #include <CppCallPlayer.hpp>
+#include <ICallable.hpp>
 
 enum IMain_Start_Flags
 {
@@ -15,44 +19,59 @@ enum IMain_Start_Flags
    , Do_Playback = 0x4
 };
 
-class IMain : public ITrackable
+class IMain : public ICallable
 {
    CppCallPlayer           Player;
    CppCallRecorder         Recorder;
-   fs::path                FilePath;
    unsigned int            StartFlags;
+   fs::path                FilePath;
 
    // Construction
 public:
    IMain()
    {
-      pplayer() = &Player;
-      precorder() = &Recorder;
+      p_player() = &Player;
+      p_recorder() = &Recorder;
    }
    virtual ~IMain() = 0
    {
-      pplayer() = nullptr;
-      precorder() = nullptr;
+      p_player() = nullptr;
+      p_recorder() = nullptr;
    }
 
-   void startCpp(unsigned int nFlags, std::string filename)
+   void startCpp(unsigned int nFlags)
    {
+      StartFlags = nFlags;
+   }
+   void recordCpp(std::string filename)
+   {
+      failUnlessPredicate(
+         !!(Do_Recording & StartFlags)
+         , CppCallError_StartFlagsProblem);
+
       FilePath = filename;
       bool bExists = fs::exists(FilePath);
-      if (Do_Recording & nFlags)
-      {
-         failUnlessPredicate(!bExists, CppCallError_FileCannotBeCreated);
-         Recorder.startRecording(FilePath);
-      }
-      else if (Do_Playback & nFlags)
-      {
-         failUnlessPredicate(bExists, CppCallError_FileDoesNotExist);
-         Player.playbackCppCalls(FilePath, shared_from_this());
-      }
+      failUnlessPredicate(!bExists, CppCallError_FileCannotBeCreated);
+
+      Recorder.startRecording(FilePath);
+   }
+   void playbackCpp(std::string filename)
+   {
+      failUnlessPredicate(
+         !!(Do_Playback & StartFlags)
+         , CppCallError_StartFlagsProblem);
+
+      FilePath = filename;
+      bool bExists = fs::exists(FilePath);
+      failUnlessPredicate(bExists, CppCallError_FileDoesNotExist);
+
+      Player.playbackCppCalls(FilePath, shared_from_this());
    }
    void finishCpp()
    {
-      Recorder.finishRecording();
+      Recorder.finishRecording(objectKey);
       Player.finishPlayback();
    }
 };
+
+#pragma message("WOX <- IMain")

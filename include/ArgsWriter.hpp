@@ -1,15 +1,14 @@
 /*
-* Copyright 2018 Autodesk
-*/
+ * Copyright 2018 Autodesk
+ */
 
 #pragma once
+#pragma message("WOX -> ArgsWriter")
 
 // ArgsWriter.hpp
 
 #include <CppCallStream.hpp>
-// WOX #include <ITrackable.hpp>
-
-class ITrackable;
+#include <ITrackable.hpp>
 
 class ArgsWriter final
 {
@@ -92,7 +91,7 @@ public:
    }
    ArgsWriter& pushArg(std::shared_ptr<const ITrackable> pTrackable)
    {
-      return pushArg(/* pTrackable ? pTrackable->m_objectKey : */ "nullptr");
+      return pushArg(pTrackable ? pTrackable->objectKey : "nullptr");
    }
    ArgsWriter& pushArg(const std::vector<std::string>& vStrings)
    {
@@ -125,3 +124,5 @@ public:
       return *this;
    }
 };
+
+#pragma message("WOX <- ArgsWriter")

@@ -3,6 +3,7 @@
  */
 
 #pragma once
+#pragma message("WOX -> CppCallPlayerInterface")
 
 // CppCallPlayerInterface.hpp
 
@@ -27,4 +28,6 @@ public:
       return cppCallStream().streaming();
    }
 };
+
+#pragma message("WOX <- CppCallPlayerInterface")
 

@@ -3,13 +3,15 @@
  */
 
 #pragma once
+#pragma message("WOX -> ArgsReader")
 
-#include <vector>
+// ArgsReader.hpp
 
 #include <CppCallError.hpp>
 #include <CppCallMap.hpp>
 #include <CppCallStream.hpp>
 #include <CRSError.hpp>
+#include <vector>
 
 class ArgsReader final
 {
@@ -89,23 +91,23 @@ public:
       numberOfArgsMustMatch(m_nArgsPoppedSoFar, nFields);
       fulfillReserved();
    }
-   void aliasTrackable(std::string ssTrackable, std::shared_ptr<ITrackable> pTrackable) const
+   void aliasTrackable(std::string objectKey, std::shared_ptr<ITrackable> pTrackable) const
    {
-      // Associate guid from file with corresponding live object just created.
-      cppCallStream().aliased()[ssTrackable] = pTrackable;
+      // Associate key from file with corresponding live object just created.
+      cppCallStream().aliased()[objectKey] = pTrackable;
    }
-   std::shared_ptr<ITrackable> unaliasTrackable(std::string ssMemorexId) const
+   std::shared_ptr<ITrackable> unaliasTrackable(std::string aliasedKey) const
    {
-      // Get live object given guid from file.
-      auto ret = unaliasTrackableSafely(ssMemorexId);
+      // Get live object given key from file.
+      auto ret = unaliasTrackableSafely(aliasedKey);
       failUnlessFound(!!ret, CppCallError_NoSuchTrackable);
       return ret;
    }
-   std::shared_ptr<ITrackable> unaliasTrackableSafely(std::string ssMemorexId) const
+   std::shared_ptr<ITrackable> unaliasTrackableSafely(std::string aliasedKey) const
    {
-      // Get live object given guid from file. Don't throw. Let error be forced by caller.
+      // Get live object given key from file. Don't throw. Let error be forced by caller.
       std::shared_ptr<ITrackable> ret;
-      auto live = cppCallStream().aliased().find(ssMemorexId);
+      auto live = cppCallStream().aliased().find(aliasedKey);
       if (cppCallStream().aliased().end() != live)
          ret = live->second;
       return ret;
@@ -115,7 +117,7 @@ public:
       // empty string maps to empty string
       if (!ssLiveURN.empty())
       {
-         // If create a repository on playback, branch guid will not be the same. Account for that.
+         // If create a repository on playback, branch URN will not be the same. Account for that.
          cppCallStream().aliasedURNs()[ssMemorexURN] = ssLiveURN;
       }
    }
@@ -124,7 +126,7 @@ public:
       // empty string maps to empty string
       if (ssMemorexURN.empty())
          return ssMemorexURN;
-      // We need the live branch guid given original branch guid from file.
+      // We need the live branch URN given original branch URN from file.
       auto live = cppCallStream().aliasedURNs().find(ssMemorexURN);
       failUnlessFound(cppCallStream().aliasedURNs().end() != live, CppCallError_NoSuchURN);
       return live->second;
@@ -179,9 +181,9 @@ public:
    {
       failUnlessPredicate(!!pTrackable, CppCallError_OutOfSequence, m_pEntry);
    }
-   void mustNotBeEmpty(std::string ssTrackable) const
+   void mustNotBeEmpty(std::string objectKey) const
    {
-      failUnlessPredicate(!ssTrackable.empty(), CppCallError_OutOfSequence, m_pEntry);
+      failUnlessPredicate(!objectKey.empty(), CppCallError_OutOfSequence, m_pEntry);
    }
    void numberOfArgsMustMatch(int nMemorex, int nLive) const
    {
@@ -192,3 +194,5 @@ public:
       failUnlessPredicate(bFound, err, m_pEntry);
    }
 };
+
+#pragma message("WOX <- ArgsReader")
