@@ -3,35 +3,23 @@
  */
 
 #pragma once
-#pragma message("WOX -> CppCallRecorderInterface")
 
-// CppCallRecorderInterface.hpp
+// IRecorder.hpp
 
 #include <Aliases.hpp>
 #include <ArgsWriter.hpp>
-#include <CppCallStream.hpp>
+#include <IAgent.hpp>
 
-class CppCallRecorderInterface
+class IRecorder : public IAgent
 {
-   mutable CppCallStream                  m_callStream;
-
 public:
-   CppCallRecorderInterface()
+   IRecorder()
    {}
-   virtual ~CppCallRecorderInterface() = 0
+   virtual ~IRecorder() = 0
    {}
-
-   CppCallStream& cppCallStream() const
-   {
-      return m_callStream;
-   }
-   bool streaming() const
-   {
-      return cppCallStream().streaming();
-   }
 
    template<class ITarget, typename... Args>
-   void recordOne(std::string methodname, std::shared_ptr<const ITarget> pTrackable, Args... args)
+   void recordCppCall(std::string methodname, std::shared_ptr<const ITarget> pTrackable, Args... args)
    {
       ArgsWriter aw(cppCallStream());
       // Push the api name, then the object
@@ -42,4 +30,3 @@ public:
    }
 };
 
-#pragma message("WOX <- CppCallRecorderInterface")

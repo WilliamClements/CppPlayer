@@ -3,20 +3,19 @@
  */
 
 #pragma once
-#pragma message("WOX -> CppCallPlayerInterface")
 
-// CppCallPlayerInterface.hpp
+// IAgent.hpp
 
 #include <CppCallStream.hpp>
 
-class CppCallPlayerInterface
+class IAgent
 {
    mutable CppCallStream                  m_callStream;
 
 public:
-   CppCallPlayerInterface()
+   IAgent()
    {}
-   virtual ~CppCallPlayerInterface() = 0
+   virtual ~IAgent() = 0
    {}
 
    CppCallStream& cppCallStream() const
@@ -28,6 +27,3 @@ public:
       return cppCallStream().streaming();
    }
 };
-
-#pragma message("WOX <- CppCallPlayerInterface")
-

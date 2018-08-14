@@ -3,7 +3,6 @@
  */
 
 #pragma once
-#pragma message("WOX -> CppCallStream")
 
 // CppCallStream.hpp
 
@@ -120,5 +119,3 @@ public:
       return ret;
    }
 };
-
-#pragma message("WOX <- CppCallStream")

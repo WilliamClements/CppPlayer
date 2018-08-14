@@ -3,7 +3,6 @@
  */
 
 #pragma once
-#pragma message("WOX -> ArgsReader")
 
 // ArgsReader.hpp
 
@@ -194,5 +193,3 @@ public:
       failUnlessPredicate(bFound, err, m_pEntry);
    }
 };
-
-#pragma message("WOX <- ArgsReader")

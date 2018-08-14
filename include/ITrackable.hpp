@@ -3,7 +3,6 @@
  */
 
 #pragma once
-#pragma message("WOX -> ITrackable")
 
 // ITrackable.hpp
 
@@ -27,4 +26,3 @@ public:
    std::string objectKey;
 };
 
-#pragma message("WOX <- ITrackable")

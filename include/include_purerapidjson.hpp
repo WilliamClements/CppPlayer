@@ -3,7 +3,6 @@
  */
 
 #pragma once
-#pragma message("WOX -> include_purerapidjson")
 
 // include_purerapidjson.hpp
 
@@ -99,5 +98,3 @@ namespace JSON
       fclose(fp);
    }
 }
-
-#pragma message("WOX <- include_purerapidjson")

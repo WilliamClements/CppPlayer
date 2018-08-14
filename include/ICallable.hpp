@@ -3,12 +3,11 @@
  */
 
 #pragma once
-#pragma message("WOX -> ICallable")
 
 // ICallable.hpp
 
-#include <CppCallPlayerInterface.hpp>
-#include <CppCallRecorderInterface.hpp>
+#include <IPlayer.hpp>
+#include <IRecorder.hpp>
 #include <ITrackable.hpp>
 #include <functional>
 
@@ -41,7 +40,7 @@ public:
    void recordCppCall(const CppCall<ITarget, returnsValue, numArg>& cc, Args... args) const
    {
       if (recording())
-         recorder().recordOne<ITarget>(
+         recorder().recordCppCall<ITarget>(
             cc.api()
             , std::dynamic_pointer_cast<const ITarget>(shared_from_this())
             , args...);
@@ -49,21 +48,21 @@ public:
 
    // Utilities
 protected:
-   static CppCallPlayerInterface*& p_player()
+   static IPlayer*& p_player()
    {
-      static CppCallPlayerInterface* pPlayer = nullptr;
+      static IPlayer* pPlayer = nullptr;
       return pPlayer;
    }
-   static CppCallRecorderInterface*& p_recorder()
+   static IRecorder*& p_recorder()
    {
-      static CppCallRecorderInterface* pRecorder = nullptr;
+      static IRecorder* pRecorder = nullptr;
       return pRecorder;
    }
-   static CppCallPlayerInterface& player()
+   static IPlayer& player()
    {
       return *p_player();
    }
-   static CppCallRecorderInterface& recorder()
+   static IRecorder& recorder()
    {
       return *p_recorder();
    }
@@ -76,5 +75,3 @@ protected:
       return recorder().streaming();
    }
 };
-
-#pragma message("WOX <- ICallable")

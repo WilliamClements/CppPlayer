@@ -3,7 +3,6 @@
  */
 
 #pragma once
-#pragma message("WOX -> ArgsWriter")
 
 // ArgsWriter.hpp
 
@@ -124,5 +123,3 @@ public:
       return *this;
    }
 };
-
-#pragma message("WOX <- ArgsWriter")

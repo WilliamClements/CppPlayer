@@ -3,24 +3,23 @@
  */
 
 #pragma once
-#pragma message("WOX -> CppCallRecorder")
 
-// CppCallRecorder.hpp
+// CppRecorder.hpp
 
 #include <Aliases.hpp>
 #include <ArgsWriter.hpp>
-#include <CppCallRecorderInterface.hpp>
+#include <IRecorder.hpp>
 #include <CppCallStream.hpp>
 
-class CppCallRecorder final : public CppCallRecorderInterface
+class CppRecorder final : public IRecorder
 {
    fs::path                               m_outputfilepath;
 
 public:
-   CppCallRecorder()
+   CppRecorder()
       : m_outputfilepath()
    {}
-   ~CppCallRecorder()
+   ~CppRecorder()
    {}
 
    // Methods
@@ -66,4 +65,3 @@ public:
    }
 };
 
-#pragma message("WOX <- CppCallRecorder")

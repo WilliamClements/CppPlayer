@@ -3,7 +3,6 @@
  */
 
 #pragma once
-#pragma message("WOX -> CppCallError")
 
 // CppCallError.hpp
 
@@ -109,5 +108,3 @@ public:
       reportInfo(ERR_FAILURE, ss);
    }
 };
-
-#pragma message("WOX <- CppCallError")

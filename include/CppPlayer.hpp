@@ -3,24 +3,23 @@
  */
 
 #pragma once
-#pragma message("WOX -> CppCallPlayer")
 
-// CppCallPlayer.hpp
+// CppPlayer.hpp
 
 #include <ArgsReader.hpp>
 #include <CppCallError.hpp>
-#include <CppCallPlayerInterface.hpp>
+#include <IPlayer.hpp>
 #include <CppCallStream.hpp>
 #include <ITrackable.hpp>
 
 class IMain;
 
-class CppCallPlayer final : public CppCallPlayerInterface
+class CppPlayer final : public IPlayer
 {
    mutable CppCallStream m_callStream;
 
 public:
-   CppCallPlayer()
+   CppPlayer()
    {}
      
    CppCallStream& cppCallStream() const
@@ -65,5 +64,3 @@ public:
 
    void execute(std::string);
 };
-
-#pragma message("WOX <- CppCallPlayer")

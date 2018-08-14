@@ -3,13 +3,12 @@
  */
 
 #pragma once
-#pragma message("WOX -> IMain")
 
 // IMain.hpp
 
 #include <Aliases.hpp>
-#include <CppCallRecorder.hpp>
-#include <CppCallPlayer.hpp>
+#include <CppRecorder.hpp>
+#include <CppPlayer.hpp>
 #include <ICallable.hpp>
 
 enum IMain_Start_Flags
@@ -21,8 +20,8 @@ enum IMain_Start_Flags
 
 class IMain : public ICallable
 {
-   CppCallPlayer           Player;
-   CppCallRecorder         Recorder;
+   CppPlayer           Player;
+   CppRecorder         Recorder;
    unsigned int            StartFlags;
    fs::path                FilePath;
 
@@ -73,5 +72,3 @@ public:
       Player.finishPlayback();
    }
 };
-
-#pragma message("WOX <- IMain")
