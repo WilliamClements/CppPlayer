@@ -22,21 +22,17 @@ class IMain : public ICallable
 {
    CppPlayer           Player;
    CppRecorder         Recorder;
-   unsigned int            StartFlags;
-   fs::path                FilePath;
+   unsigned int        StartFlags;
+   fs::path            FilePath;
 
    // Construction
 public:
-   IMain()
-   {
-      p_player() = &Player;
-      p_recorder() = &Recorder;
-   }
+   IMain(CallMap& callMap)
+      : Player{ callMap }
+      , Recorder{ callMap }
+   {}
    virtual ~IMain() = 0
-   {
-      p_player() = nullptr;
-      p_recorder() = nullptr;
-   }
+   {}
 
    void startCpp(unsigned int nFlags)
    {
@@ -44,25 +40,25 @@ public:
    }
    void recordCpp(std::string filename)
    {
-      failUnlessPredicate(
+      Assert(
          !!(Do_Recording & StartFlags)
          , Assertions_StartFlagsProblem);
 
       FilePath = filename;
       bool bExists = fs::exists(FilePath);
-      failUnlessPredicate(!bExists, Assertions_FileCannotBeCreated);
+      Assert(!bExists, Assertions_FileCannotBeCreated);
 
       Recorder.startRecording(FilePath);
    }
    void playbackCpp(std::string filename)
    {
-      failUnlessPredicate(
+      Assert(
          !!(Do_Playback & StartFlags)
          , Assertions_StartFlagsProblem);
 
       FilePath = filename;
       bool bExists = fs::exists(FilePath);
-      failUnlessPredicate(bExists, Assertions_FileDoesNotExist);
+      Assert(bExists, Assertions_FileDoesNotExist);
 
       Player.playbackCppCalls(FilePath, shared_from_this());
    }

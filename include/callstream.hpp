@@ -21,6 +21,10 @@ extern std::unique_ptr<IIo> makeIo();
 
 class CallStream final
 {
+public:
+   CallMap&                          m_callMap;
+
+private:
    std::unique_ptr<IIo>              m_io;
    CppFileHeader                     m_fileheader;
    Aliased                           m_aliased;
@@ -30,17 +34,18 @@ class CallStream final
    std::string                       m_mainId;
 
 public:
-   CallStream()
-      : m_u64CallsCounter()
+   CallStream(CallMap& callMap)
+      : m_callMap(callMap)
+      , m_io()
+      , m_u64CallsCounter()
       , m_u64CallsPreRecorded()
       , m_mainId()
-      , m_io()
    {}
 
    ~CallStream()
    {}
 
-   IIo& io()                  { return *m_io.get(); }
+   IIo& io()                         { return *m_io.get(); }
    Aliased& aliased()                { return m_aliased; }
    AliasedURNs& aliasedURNs()        { return m_aliasedURNs; }
    uint64_t& callsCounter()          { return m_u64CallsCounter; }

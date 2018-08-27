@@ -33,9 +33,13 @@ enum Assertions
 
 inline void fail(Assertions err, std::string ssId)
 {
+   int golf = __cplusplus;
+   _tprintf(_T("hoo %d\n"), golf);
    std::string base = ssId + "/";
    switch (err)
    {
+   case Assertions_StartFlagsProblem:
+      throw std::logic_error(base + "must specify supported flags for recording/playback");
    case Assertions_UnequalReturnResult:
       throw std::logic_error(base + "result of operation different from recording to playback");
    case Assertions_DuplicateAPINames:
@@ -68,7 +72,7 @@ inline void fail(Assertions err, std::string ssId)
    }
 }
 
-inline void failUnlessPredicate(bool bPredicate, Assertions err, std::string ssId)
+inline void Assert(bool bPredicate, Assertions err, std::string ssId = "")
 {
    if (!bPredicate)
       fail(err, ssId);

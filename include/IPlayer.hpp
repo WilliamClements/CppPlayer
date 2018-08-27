@@ -11,7 +11,8 @@
 class IPlayer : public IAgent
 {
 public:
-   IPlayer()
+   IPlayer(CallMap& callMap)
+      : IAgent{ callMap }
    {}
    virtual ~IPlayer() = 0
    {}

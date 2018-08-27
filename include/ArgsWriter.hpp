@@ -11,15 +11,20 @@
 
 class ArgsWriter final
 {
-   CallStream&                            m_callStream;
-   const CallMapEntry*                    m_pEntry;
+public:
+   CallStream&                               m_callStream;
+   CallMap&                                  m_callMap;
+
+private:
+   UntargetedCall*                           m_ucall;
    std::shared_ptr<const ITrackable>         m_pThisTarget;
    int                                       m_nArgsPushedSoFar;
 
 public:
    explicit ArgsWriter(CallStream& callStream)
       : m_callStream(callStream)
-      , m_pEntry()
+      , m_callMap(callStream.m_callMap)
+      , m_ucall()
       , m_pThisTarget()
       , m_nArgsPushedSoFar()
    {}
@@ -31,29 +36,21 @@ protected:
    {
       return m_callStream;
    }
-   const CallMapEntry& entry()
-   {
-      return *m_pEntry;
-   }
-   std::string api()
-   {
-      return entry().api();
-   }
    std::shared_ptr<const ITrackable> getThisTarget()
    {
       return m_pThisTarget;
    }
 
 public:
-   ArgsWriter& pushHeader(std::string methodname, std::shared_ptr<const ITrackable> pThisTarget)
+   ArgsWriter& pushHeader(std::string api, std::shared_ptr<const ITrackable> pThisTarget)
    {
       // Finish initializing object
-      m_pEntry = &callMap().lookupMethod(methodname);
+      m_ucall = &m_callMap.lookupMethod(api);
       m_pThisTarget = pThisTarget;
       // Start recording call
       callStream().io().pushHeader();
       // Stream out api and target
-      pushArgs(api(), getThisTarget());
+      pushArgs(api, getThisTarget());
       return *this;
    }
 
@@ -98,7 +95,7 @@ public:
    }
    ArgsWriter& pushCall()
    {
-      failUnlessPredicate(entry().numExpectedFields() == m_nArgsPushedSoFar, Assertions_WrongNumberOfFields, m_pEntry);
+      // WOX failUnlessPredicate(entry().numExpectedFields() == m_nArgsPushedSoFar, Assertions_WrongNumberOfFields, m_pEntry);
       callStream().io().pushCurrentCall();
       ++callStream().callsCounter();
       return *this;

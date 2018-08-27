@@ -13,11 +13,12 @@
 
 class CppRecorder final : public IRecorder
 {
-   fs::path                               m_outputfilepath;
+   fs::path m_outputfilepath;
 
 public:
-   CppRecorder()
-      : m_outputfilepath()
+   CppRecorder(CallMap& callMap)
+      : IRecorder{ callMap }
+      , m_outputfilepath()
    {}
    ~CppRecorder()
    {}
@@ -37,31 +38,29 @@ public:
 
 // Inner function used in boilerplates
 template<class ITarget>
-using TargetPlaybackCall
-= std::function<void(ITarget& rThis, const ArgsReader&)>;
+using TargetedCall = std::function<void(ITarget& rThis, const ArgsReader&)>;
 
 // This class stores information known about the call (in a map)
-template<class ITarget, bool returnsValue, int numArgs>
+template<class ITarget>
 class CppCall sealed
 {
-   CallMapEntry* m_pEntry;
 public:
-   CppCall(std::string api, TargetPlaybackCall<ITarget> fun)
+   std::string m_api;
+
+   CppCall(std::string api, TargetedCall<ITarget> fun)
+      : m_api(api)
    {
-      // In this constructor run during static initialization, we create and registry one entry into the map
-      PlaybackCall executeFun =
+      // In this constructor run during static initialization, we register one functor into the map
+      UntargetedCall executeFun =
          [fun](const ArgsReader& ar)
       {
+         // Body of untargeted functor executed during playback
          auto pThis = std::dynamic_pointer_cast<ITarget>(ar.getThisTarget());
-         failUnlessPredicate(!!pThis.get(), Assertions_NoSuchTarget);
+         Assert(!!pThis.get(), Assertions_NoSuchTarget);
+         // Invoke targeted functor
          fun(*pThis.get(), ar);
       };
-      auto pEntry = std::make_unique<CallMapEntry>(api, executeFun, returnsValue, numArgs);
-      m_pEntry = &callMap().emplaceMethod(std::move(pEntry));
-   }
-   std::string api() const
-   {
-      return m_pEntry->api();
+      (void)callMap().emplaceMethod(api, executeFun);
    }
 };
 

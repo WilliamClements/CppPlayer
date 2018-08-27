@@ -15,7 +15,8 @@ class ArgsReader final
 {
 private:
    CallStream&                         m_callStream;
-   const CallMapEntry*                 m_pEntry;
+   CallMap&                            m_callMap;
+   UntargetedCall*                     m_ucall;
    std::shared_ptr<ITrackable>         m_pThisTarget;
    mutable std::vector<std::string>    m_reserve;
    mutable std::vector<
@@ -25,7 +26,8 @@ private:
 public:
    explicit ArgsReader(CallStream& callStream)
       : m_callStream(callStream)
-      , m_pEntry()
+      , m_callMap(callStream.m_callMap)
+      , m_ucall()
       , m_pThisTarget()
       , m_nArgsPoppedSoFar()
    {}
@@ -37,14 +39,6 @@ protected:
    {
       return m_callStream;
    }
-   const CallMapEntry& entry() const
-   {
-      return *m_pEntry;
-   }
-   std::string api() const
-   {
-      return entry().api();
-   }
 
 public:
    std::shared_ptr<ITrackable> getThisTarget() const
@@ -53,7 +47,7 @@ public:
    }
    ArgsReader& popHeader()
    {
-      m_pEntry = &callMap().lookupMethod(popString());
+      m_ucall = &callMap().lookupMethod(popString());
       // Defer error reporting on target not found
       m_pThisTarget = unaliasTrackableSafely(popString());
       return *this;
@@ -81,12 +75,11 @@ public:
       std::string stringlist = callStream().io().popString();
       return callStream().recomposeStringVector(stringlist);
    }
-   void callCpp(int nFields) const
+   void invokeTargetApi() const
    {
       ++callStream().callsCounter();
       // Invoke wrapper which will call the target api
-      entry().call()(*this);
-      numberOfArgsMustMatch(m_nArgsPoppedSoFar, nFields);
+      (*m_ucall)(*this);
       fulfillReserved();
    }
    void aliasTrackable(std::string objectKey, std::shared_ptr<ITrackable> pTrackable) const
@@ -98,7 +91,7 @@ public:
    {
       // Get live object given key from file.
       auto ret = unaliasTrackableSafely(aliasedKey);
-      failUnlessFound(!!ret, Assertions_NoSuchTrackable);
+      Assert(!!ret, Assertions_NoSuchTrackable);
       return ret;
    }
    std::shared_ptr<ITrackable> unaliasTrackableSafely(std::string aliasedKey) const
@@ -126,43 +119,24 @@ public:
          return ssMemorexURN;
       // We need the live branch URN given original branch URN from file.
       auto live = callStream().aliasedURNs().find(ssMemorexURN);
-      failUnlessFound(callStream().aliasedURNs().end() != live, Assertions_NoSuchURN);
+      Assert(callStream().aliasedURNs().end() != live, Assertions_NoSuchURN);
       return live->second;
    }
-   void reserveZero() const
-   {
-      std::string toReserve = popString();
-      failUnlessPredicate(
-         toReserve == "nullptr"
-         , Assertions_TrackableMustBeNull);
-   }
-   void reserveOne() const
-   {
-      std::string toReserve = popString();
-      failUnlessPredicate(
-         toReserve != "nullptr"
-         , Assertions_NoSuchTrackable);
-      m_reserve.push_back(toReserve);
-   }
-   void reserve() const
-   {
-      std::string toReserve = popString();
-      if (toReserve != "nullptr")
-         m_reserve.push_back(toReserve);
-   }
-   void fulfill(std::shared_ptr<ITrackable> pTrackable) const
-   {
-      if (pTrackable)
-         m_fulfill.push_back(pTrackable);
-   }
+   void functionReturn(bool) const
+   {}
+   void functionReturn(Err) const
+   {}
+   void functionReturn(std::shared_ptr<ITrackable> pTrackable) const
+   {}
    void fulfillReserved() const
    {
-      failUnlessPredicate(
+      Assert(
          m_reserve.size() == m_fulfill.size()
          , Assertions_UnmatchedFulfillVersusReserve);
       for (size_t ii = 0; ii < m_reserve.size(); ii++)
          aliasTrackable(m_reserve[ii], m_fulfill[ii]);
    }
+#if WOX
    void compareBeforeAndAfter(bool bMemorex, bool bLive) const
    {
       failUnlessPredicate(bMemorex == bLive, Assertions_UnequalReturnResult, m_pEntry);
@@ -183,12 +157,9 @@ public:
    {
       failUnlessPredicate(!objectKey.empty(), Assertions_OutOfSequence, m_pEntry);
    }
-   void numberOfArgsMustMatch(int nMemorex, int nLive) const
-   {
-      failUnlessPredicate(nMemorex == nLive, Assertions_WrongNumberOfFields, m_pEntry);
-   }
    void failUnlessFound(bool bFound, Assertions err) const
    {
       failUnlessPredicate(bFound, err, m_pEntry);
    }
+#endif
 };

@@ -14,7 +14,8 @@
 class CppPlayer final : public IPlayer
 {
 public:
-   CppPlayer()
+   CppPlayer(CallMap& callMap)
+      : IPlayer(callMap)
    {}
      
    void playbackCppCalls(fs::path filepath, std::shared_ptr<ITrackable> pIMain)
@@ -28,16 +29,17 @@ public:
       }
          , [this](int nFields)
       {
-         this->playbackOne(nFields);
+         nFields;
+         this->playbackOne();
       });
    }
-   void playbackOne(int nFields)
+   void playbackOne()
    {
       ArgsReader ar(callStream());
       // scan
       ar.popHeader();
       // execute
-      ar.callCpp(nFields);
+      ar.invokeTargetApi();
    }
 
    void startPlayback(std::shared_ptr<ITrackable> pIMain)

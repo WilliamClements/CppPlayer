@@ -18,6 +18,7 @@
 #define RAPIDJSON_HAS_CXX11_RVALUE_REFS 1
 #define RAPIDJSON_HAS_CXX11_TYPETRAITS 1
 #define RAPIDJSON_HAS_STDSTRING 1
+#define RAPIDJSON_NOMEMBERITERATORCLASS 1
 
 #pragma warning(push)
 #pragma warning(disable: 4995)
@@ -230,7 +231,7 @@ public:
       filename += "\\";
       filename += filepath.filename().generic_string();
       errno_t bad = fopen_s(&fp, filename.c_str(), "wb"); // non-Windows use "w"
-      failUnlessPredicate(!bad, Assertions_FileCannotBeCreated, filename);
+      Assert(!bad, Assertions_FileCannotBeCreated, filename);
       // good open, continue
       char writeBuffer[65536];
       rapidjson::FileWriteStream os(fp, writeBuffer, sizeof(writeBuffer));
@@ -246,7 +247,7 @@ public:
       filename += "\\";
       filename += filepath.filename().generic_string();
       errno_t bad = fopen_s(&fp, filename.c_str(), "rb"); // non-Windows use "r"
-      failUnlessPredicate(!bad, Assertions_FileDoesNotExist, filename);
+      Assert(!bad, Assertions_FileDoesNotExist, filename);
       // good open, continue
       char readBuffer[65536];
       rapidjson::FileReadStream is(fp, readBuffer, sizeof(readBuffer));

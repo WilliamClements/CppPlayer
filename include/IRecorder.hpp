@@ -13,17 +13,21 @@
 class IRecorder : public IAgent
 {
 public:
-   IRecorder()
+   IRecorder(CallMap& callMap)
+      : IAgent{ callMap }
    {}
    virtual ~IRecorder() = 0
    {}
 
    template<class ITarget, typename... Args>
-   void recordCppCall(std::string methodname, std::shared_ptr<const ITarget> pTrackable, Args... args)
+   void recordCall(
+      std::string api
+      , std::shared_ptr<const ITarget> pTrackable
+      , Args... args)
    {
       ArgsWriter aw(callStream());
       // Push the api name, then the object
-      aw.pushHeader(methodname, pTrackable);
+      aw.pushHeader(api, pTrackable);
       // Push the arguments, in order
       aw.pushArgs(args...);
       aw.pushCall();

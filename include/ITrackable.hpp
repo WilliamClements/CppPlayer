@@ -9,6 +9,9 @@
 #include <atomic>
 #include <string>
 
+template<class ITarget>
+class CppCall;
+
 // Root keyed class 
 class ITrackable
 {

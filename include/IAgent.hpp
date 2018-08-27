@@ -13,7 +13,8 @@ class IAgent
    mutable CallStream                  m_callStream;
 
 public:
-   IAgent()
+   IAgent(CallMap& callMap)
+      : m_callStream(callMap)
    {}
    virtual ~IAgent() = 0
    {}
