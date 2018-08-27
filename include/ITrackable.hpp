@@ -3,12 +3,14 @@
  */
 
 #pragma once
-#pragma message("WOX -> ITrackable")
 
 // ITrackable.hpp
 
 #include <atomic>
 #include <string>
+
+template<class ITarget>
+class CppCall;
 
 // Root keyed class 
 class ITrackable
@@ -27,4 +29,3 @@ public:
    std::string objectKey;
 };
 
-#pragma message("WOX <- ITrackable")

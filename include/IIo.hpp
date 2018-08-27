@@ -3,37 +3,34 @@
  */
 
 #pragma once
-#pragma message("WOX -> ICppCallIo")
 
-// ICppCallIo.hpp
+// IIo.hpp
 
-#include <Aliases.hpp>
 #include <chrono>
 #include <functional>
+#include "NamespaceAliases.hpp"
 
-using time_point
-   = std::chrono::system_clock::time_point;
-using PlayerOfOneCall
-   = std::function<void(int nFields)>;
-using OnStartPlaying
-   = std::function<void()>;
+using time_point = std::chrono::system_clock::time_point;
+using PlayerOfOneCall = std::function<void(int nFields)>;
+using OnStartPlaying = std::function<void()>;
 
-struct CppCallFileHeader
+struct CppFileHeader
 {
    time_point                  m_startTime;
    time_point                  m_finishTime;
-   uint64_t                    m_numCppCallsRecorded;
+   uint64_t                    m_numCallsRecorded;
    std::string                 m_mainId;
 };
 
-// Interface for the CppCallStreams to read and write to files; e.g. via JSON
-class ICppCallIo
+// Interface for CallStream to read and write to files; e.g. via JSON
+class IIo
 {
 public:
-   virtual ~ICppCallIo()       {}
+   virtual ~IIo() = 0
+   {}
 
-   virtual CppCallFileHeader   getFileHeader() = 0;
-   virtual void                setFileHeader(CppCallFileHeader) = 0;
+   virtual CppFileHeader   getFileHeader() = 0;
+   virtual void                setFileHeader(CppFileHeader) = 0;
 
    virtual void                startRecording() = 0;
    virtual void                finishRecording(fs::path outputfilepath) = 0;
@@ -51,5 +48,3 @@ public:
    virtual std::string         popString() const = 0;
    virtual double              popDouble() const = 0;
 };
-
-#pragma message("WOX <- ICppCallIo")

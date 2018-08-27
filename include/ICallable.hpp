@@ -3,26 +3,13 @@
  */
 
 #pragma once
-#pragma message("WOX -> ICallable")
 
 // ICallable.hpp
 
-#include <CppCallPlayerInterface.hpp>
-#include <CppCallRecorderInterface.hpp>
-#include <ITrackable.hpp>
 #include <functional>
-
-enum
-{
-   ReturnsAValue = true
-   , ReturnsVoid = false
-};
-
-template<class ITarget, bool returnsValue, int numArgs>
-class CppCall;
-
-using ICallableCallback
-   = std::function<void(std::shared_ptr<std::exception>)>;
+#include "IPlayer.hpp"
+#include "IRecorder.hpp"
+#include "ITrackable.hpp"
 
 // Root class enabling automation wrappers to be written
 class ICallable : public ITrackable, public std::enable_shared_from_this<ICallable>
@@ -36,34 +23,44 @@ public:
 
    // Methods
 public:
-   // The derived I-classes use "recordCppCall" to trigger recording for each call.
-   template<class ITarget, bool returnsValue, int numArg, typename... Args>
-   void recordCppCall(const CppCall<ITarget, returnsValue, numArg>& cc, Args... args) const
+   // The derived I-classes use "recordCall" to trigger recording for each call.
+   template<class ITarget, typename... Args>
+   void recordFunction(const CppCall<ITarget>& cc, Args... args) const
    {
       if (recording())
-         recorder().recordOne<ITarget>(
-            cc.api()
+         recorder().recordCall<ITarget>(
+            cc.m_api
+            , std::dynamic_pointer_cast<const ITarget>(shared_from_this())
+            , args...);
+   }
+
+   template<class ITarget, typename... Args>
+   void recordMethod(const CppCall<ITarget>& cc, Args... args) const
+   {
+      if (recording())
+         recorder().recordCall<ITarget>(
+            cc.m_api
             , std::dynamic_pointer_cast<const ITarget>(shared_from_this())
             , args...);
    }
 
    // Utilities
 protected:
-   static CppCallPlayerInterface*& p_player()
+   static IPlayer*& p_player()
    {
-      static CppCallPlayerInterface* pPlayer = nullptr;
+      static IPlayer* pPlayer = nullptr;
       return pPlayer;
    }
-   static CppCallRecorderInterface*& p_recorder()
+   static IRecorder*& p_recorder()
    {
-      static CppCallRecorderInterface* pRecorder = nullptr;
+      static IRecorder* pRecorder = nullptr;
       return pRecorder;
    }
-   static CppCallPlayerInterface& player()
+   static IPlayer& player()
    {
       return *p_player();
    }
-   static CppCallRecorderInterface& recorder()
+   static IRecorder& recorder()
    {
       return *p_recorder();
    }
@@ -76,5 +73,3 @@ protected:
       return recorder().streaming();
    }
 };
-
-#pragma message("WOX <- ICallable")

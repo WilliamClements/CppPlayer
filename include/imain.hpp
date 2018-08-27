@@ -3,14 +3,13 @@
  */
 
 #pragma once
-#pragma message("WOX -> IMain")
 
 // IMain.hpp
 
-#include <Aliases.hpp>
-#include <CppCallRecorder.hpp>
-#include <CppCallPlayer.hpp>
-#include <ICallable.hpp>
+#include "CppPlayer.hpp"
+#include "CppRecorder.hpp"
+#include "ICallable.hpp"
+#include "NamespaceAliases.hpp"
 
 enum IMain_Start_Flags
 {
@@ -21,23 +20,19 @@ enum IMain_Start_Flags
 
 class IMain : public ICallable
 {
-   CppCallPlayer           Player;
-   CppCallRecorder         Recorder;
-   unsigned int            StartFlags;
-   fs::path                FilePath;
+   CppPlayer           Player;
+   CppRecorder         Recorder;
+   unsigned int        StartFlags;
+   fs::path            FilePath;
 
    // Construction
 public:
-   IMain()
-   {
-      p_player() = &Player;
-      p_recorder() = &Recorder;
-   }
+   IMain(CallMap& callMap)
+      : Player{ callMap }
+      , Recorder{ callMap }
+   {}
    virtual ~IMain() = 0
-   {
-      p_player() = nullptr;
-      p_recorder() = nullptr;
-   }
+   {}
 
    void startCpp(unsigned int nFlags)
    {
@@ -45,25 +40,25 @@ public:
    }
    void recordCpp(std::string filename)
    {
-      failUnlessPredicate(
+      Assert(
          !!(Do_Recording & StartFlags)
-         , CppCallError_StartFlagsProblem);
+         , Assertions_StartFlagsProblem);
 
       FilePath = filename;
       bool bExists = fs::exists(FilePath);
-      failUnlessPredicate(!bExists, CppCallError_FileCannotBeCreated);
+      Assert(!bExists, Assertions_FileCannotBeCreated);
 
       Recorder.startRecording(FilePath);
    }
    void playbackCpp(std::string filename)
    {
-      failUnlessPredicate(
+      Assert(
          !!(Do_Playback & StartFlags)
-         , CppCallError_StartFlagsProblem);
+         , Assertions_StartFlagsProblem);
 
       FilePath = filename;
       bool bExists = fs::exists(FilePath);
-      failUnlessPredicate(bExists, CppCallError_FileDoesNotExist);
+      Assert(bExists, Assertions_FileDoesNotExist);
 
       Player.playbackCppCalls(FilePath, shared_from_this());
    }
@@ -73,5 +68,3 @@ public:
       Player.finishPlayback();
    }
 };
-
-#pragma message("WOX <- IMain")
