@@ -8,7 +8,7 @@
 
 #include "CppPlayer.hpp"
 #include "CppRecorder.hpp"
-#include "ICppClass.hpp"
+#include "IOperational.hpp"
 #include "NamespaceAliases.hpp"
 
 enum IMain_Start_Flags
@@ -18,7 +18,7 @@ enum IMain_Start_Flags
    , Do_Playback = 0x4
 };
 
-class IMain : public ICppClass
+class IMain : public IOperational
 {
 protected:
    CallMap&            m_callMap;
