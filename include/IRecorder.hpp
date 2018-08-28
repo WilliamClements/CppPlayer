@@ -22,12 +22,13 @@ public:
    template<class ITarget, typename... Args>
    void recordCall(
       std::string api
+      , bool returnsValue
       , std::shared_ptr<const ITarget> pTrackable
       , Args... args)
    {
       ArgsWriter aw(callStream());
-      // Push the api name, then the object
-      aw.pushHeader(api, pTrackable);
+      // Push the api name, whether function or method, then the target object
+      aw.pushHeader(api, returnsValue, pTrackable);
       // Push the arguments, in order
       aw.pushArgs(args...);
       aw.pushCall();

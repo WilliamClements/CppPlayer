@@ -16,7 +16,7 @@ class ArgsReader final
 private:
    CallStream&                         m_callStream;
    CallMap&                            m_callMap;
-   UntargetedCall*                     m_ucall;
+   TypeErased*                         m_ucall;
    std::shared_ptr<ITrackable>         m_pThisTarget;
    mutable std::vector<std::string>    m_reserve;
    mutable std::vector<
@@ -47,7 +47,7 @@ public:
    }
    ArgsReader& popHeader()
    {
-      m_ucall = &callMap().lookupMethod(popString());
+      m_ucall = &m_callMap.lookupMethod(popString());
       // Defer error reporting on target not found
       m_pThisTarget = unaliasTrackableSafely(popString());
       return *this;
@@ -122,11 +122,15 @@ public:
       Assert(callStream().aliasedURNs().end() != live, Assertions_NoSuchURN);
       return live->second;
    }
-   void functionReturn(bool) const
+   void functionReturn(std::string) const
+   {}
+   void functionReturn(int64_t) const
    {}
    void functionReturn(Err) const
    {}
    void functionReturn(std::shared_ptr<ITrackable> pTrackable) const
+   {}
+   void functionReturn(std::vector<std::string>) const
    {}
    void fulfillReserved() const
    {
