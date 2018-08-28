@@ -8,35 +8,48 @@
 
 #include "Assertions.hpp"
 #include <functional>
-#include <memory>
 #include <unordered_map>
 
 class ArgsReader;
-class ArgsWriter;
+class CppPlayer;
+class CppRecorder;
 
-// Outer function which is accessible from the map
-using UntargetedCall = std::function<void(const ArgsReader&)>;
-
-using CallMapType = std::unordered_map<std::string, UntargetedCall, std::hash<std::string>>;
+// Lookup TypeErased functor in Calls map
+using TypeErased = std::function<void(const ArgsReader&)>;
+using Calls = std::unordered_map<std::string, TypeErased, std::hash<std::string>>;
 
 class CallMap final
 {
-   CallMapType              m_theMap;
-
 public:
+   Calls              m_theMap;
+   unsigned int       StartFlags;
+   CppPlayer*         m_pPlayer;
+   CppRecorder*       m_pRecorder;
+
    CallMap()
       : m_theMap()
-   {}
-   ~CallMap()
+      , StartFlags()
+      , m_pPlayer()
+      , m_pRecorder()
    {}
 
-   void emplaceMethod(std::string api, UntargetedCall ucall)
+   void onStart(CppPlayer& player, CppRecorder& recorder)
    {
-      auto result = m_theMap.emplace(api, ucall);
-      Assert(result.second, Assertions_DuplicateAPINames, api);
+      m_pPlayer = &player;
+      m_pRecorder = &recorder;
    }
 
-   UntargetedCall& lookupMethod(std::string apiname)
+   CppPlayer& player()
+   {
+      return *m_pPlayer;
+   }
+
+   CppRecorder& recorder()
+   {
+      return *m_pRecorder;
+   }
+
+   TypeErased& lookupMethod(std::string apiname)
    {
       auto result = m_theMap.find(apiname);
       Assert(m_theMap.end() != result, Assertions_NoSuchAPIName, apiname);

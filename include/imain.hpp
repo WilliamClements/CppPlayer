@@ -8,7 +8,7 @@
 
 #include "CppPlayer.hpp"
 #include "CppRecorder.hpp"
-#include "ICallable.hpp"
+#include "IOperational.hpp"
 #include "NamespaceAliases.hpp"
 
 enum IMain_Start_Flags
@@ -18,30 +18,36 @@ enum IMain_Start_Flags
    , Do_Playback = 0x4
 };
 
-class IMain : public ICallable
+class IMain : public IOperational
 {
+protected:
+   CallMap&            m_callMap;
    CppPlayer           Player;
    CppRecorder         Recorder;
-   unsigned int        StartFlags;
    fs::path            FilePath;
 
    // Construction
 public:
    IMain(CallMap& callMap)
-      : Player{ callMap }
+      : m_callMap(callMap)
+      , Player { callMap }
       , Recorder{ callMap }
    {}
    virtual ~IMain() = 0
    {}
 
+   unsigned int& StartFlags()
+   {
+      return m_callMap.StartFlags;
+   }
    void startCpp(unsigned int nFlags)
    {
-      StartFlags = nFlags;
+      StartFlags() = nFlags;
    }
    void recordCpp(std::string filename)
    {
       Assert(
-         !!(Do_Recording & StartFlags)
+         !!(Do_Recording & StartFlags())
          , Assertions_StartFlagsProblem);
 
       FilePath = filename;
@@ -53,7 +59,7 @@ public:
    void playbackCpp(std::string filename)
    {
       Assert(
-         !!(Do_Playback & StartFlags)
+         !!(Do_Playback & StartFlags())
          , Assertions_StartFlagsProblem);
 
       FilePath = filename;

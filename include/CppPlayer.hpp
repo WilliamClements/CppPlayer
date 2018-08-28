@@ -18,14 +18,14 @@ public:
       : IPlayer(callMap)
    {}
      
-   void playbackCppCalls(fs::path filepath, std::shared_ptr<ITrackable> pIMain)
+   void playbackCppCalls(fs::path filepath, std::shared_ptr<ITrackable> pRoot)
    {
       callStream().startStreaming();
       callStream().io().playbackAll(
          filepath
-         , [this, pIMain]()
+         , [this, pRoot]()
       {
-         this->startPlayback(pIMain);
+         this->startPlayback(pRoot);
       }
          , [this](int nFields)
       {

@@ -6,6 +6,7 @@
 
 // CppRecorder.hpp
 
+#include "ArgsReader.hpp"
 #include "ArgsWriter.hpp"
 #include "CallStream.hpp"
 #include "IRecorder.hpp"
@@ -38,7 +39,7 @@ public:
 
 // Inner function used in boilerplates
 template<class ITarget>
-using TargetedCall = std::function<void(ITarget& rThis, const ArgsReader&)>;
+using Targeted = std::function<void(ITarget& rThis, const ArgsReader&)>;
 
 // This class stores information known about the call (in a map)
 template<class ITarget>
@@ -47,11 +48,11 @@ class CppCall sealed
 public:
    std::string m_api;
 
-   CppCall(std::string api, TargetedCall<ITarget> fun)
+   CppCall(std::string api, Targeted<ITarget> fun)
       : m_api(api)
    {
       // In this constructor run during static initialization, we register one functor into the map
-      UntargetedCall executeFun =
+      TypeErased executeFun =
          [fun](const ArgsReader& ar)
       {
          // Body of untargeted functor executed during playback
@@ -60,7 +61,12 @@ public:
          // Invoke targeted functor
          fun(*pThis.get(), ar);
       };
-      (void)callMap().emplaceMethod(api, executeFun);
+      (void)ITarget::libraryCallMap().m_theMap.emplace(api, executeFun);
    }
 };
 
+#define AddToMap(CLASSNAME, APINAME)                              \
+static inline CppCall<CLASSNAME> capture_ ## APINAME =            \
+{ #CLASSNAME "::" #APINAME                                        \
+  , [](CLASSNAME& pThis, const ArgsReader& ar) {                  \
+    std::invoke(&CLASSNAME::playback_ ## APINAME , pThis , ar);}};
