@@ -207,6 +207,14 @@ public:
       assert(target.IsDouble());
       return target.GetDouble();
    }
+   ReturnValue popVariant() const override
+   {
+      rapidjson::Value target;
+      playData().popValue(&target);
+      if (target.IsArray())
+         assert(target.IsDouble());
+      return ReturnValue();
+   }
 
    static std::string formatTime(time_point tp)
    {

@@ -53,7 +53,7 @@ public:
       // Start recording call
       callStream().io().pushHeader();
       // Stream out api and target
-      pushArgs(api, getThisTarget());
+      pushArgs(api, int(m_bReturnsValue), getThisTarget());
       return *this;
    }
 
