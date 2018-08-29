@@ -9,10 +9,20 @@
 #include <chrono>
 #include <functional>
 #include "NamespaceAliases.hpp"
+#include <variant>
 
 using time_point = std::chrono::system_clock::time_point;
 using PlayerOfOneCall = std::function<void(int nFields)>;
 using OnStartPlaying = std::function<void()>;
+
+using ReturnValue =
+std::variant<
+   std::monostate
+   , int
+   , double
+   , std::string
+   , std::vector<std::string>
+>;
 
 struct CppFileHeader
 {
@@ -29,7 +39,7 @@ public:
    virtual ~IIo() = 0
    {}
 
-   virtual CppFileHeader   getFileHeader() = 0;
+   virtual CppFileHeader       getFileHeader() = 0;
    virtual void                setFileHeader(CppFileHeader) = 0;
 
    virtual void                startRecording() = 0;
@@ -47,4 +57,5 @@ public:
    virtual int64_t             popInt() const = 0;
    virtual std::string         popString() const = 0;
    virtual double              popDouble() const = 0;
+   virtual ReturnValue         popVariant() const = 0;
 };

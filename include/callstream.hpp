@@ -12,9 +12,9 @@
 
 class ITrackable;
 
-using Aliased
+using Swizzled
    = std::unordered_map<std::string, std::shared_ptr<ITrackable>, std::hash<std::string>>;
-using AliasedURNs
+using URNbindings
    = std::unordered_map<std::string, std::string, std::hash<std::string>>;
 
 extern std::unique_ptr<IIo> makeIo();
@@ -27,8 +27,8 @@ public:
 private:
    std::unique_ptr<IIo>              m_io;
    CppFileHeader                     m_fileheader;
-   Aliased                           m_aliased;
-   AliasedURNs                       m_aliasedURNs;
+   Swizzled                          m_Swizzled;
+   URNbindings                       m_urnBindings;
    uint64_t                          m_u64CallsCounter;
    uint64_t                          m_u64CallsPreRecorded;
    std::string                       m_mainId;
@@ -46,8 +46,8 @@ public:
    {}
 
    IIo& io()                         { return *m_io.get(); }
-   Aliased& aliased()                { return m_aliased; }
-   AliasedURNs& aliasedURNs()        { return m_aliasedURNs; }
+   Swizzled& swizzled()              { return m_Swizzled; }
+   URNbindings& urnBindings()        { return m_urnBindings; }
    uint64_t& callsCounter()          { return m_u64CallsCounter; }
    std::string& mainId()             { return m_mainId; }
 

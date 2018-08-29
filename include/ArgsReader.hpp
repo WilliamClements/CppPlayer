@@ -16,17 +16,17 @@ class ArgsReader final
 private:
    CallStream&                         m_callStream;
    CallMap&                            m_callMap;
+   bool                                m_bReturnsValue;
+   ReturnValue                         m_ReturnValue;
    TypeErased*                         m_ucall;
    std::shared_ptr<ITrackable>         m_pThisTarget;
-   mutable std::vector<std::string>    m_reserve;
-   mutable std::vector<
-      std::shared_ptr<ITrackable>>     m_fulfill;
    mutable int                         m_nArgsPoppedSoFar;
 
 public:
    explicit ArgsReader(CallStream& callStream)
       : m_callStream(callStream)
       , m_callMap(callStream.m_callMap)
+      , m_bReturnsValue(false)
       , m_ucall()
       , m_pThisTarget()
       , m_nArgsPoppedSoFar()
@@ -48,8 +48,11 @@ public:
    ArgsReader& popHeader()
    {
       m_ucall = &m_callMap.lookupMethod(popString());
+      m_bReturnsValue = !!popInt();
+      if (m_bReturnsValue)
+         m_ReturnValue = popVariant();
       // Defer error reporting on target not found
-      m_pThisTarget = unaliasTrackableSafely(popString());
+      m_pThisTarget = unswizzle(popString());
       return *this;
    }
 
@@ -75,51 +78,53 @@ public:
       std::string stringlist = callStream().io().popString();
       return callStream().recomposeStringVector(stringlist);
    }
-   void invokeTargetApi() const
+   ReturnValue popVariant() const
+   {
+      ++m_nArgsPoppedSoFar;
+      return callStream().io().popVariant();
+   }
+   std::shared_ptr<ITrackable> popTrackable() const
+   {
+      return unswizzle(popString());
+   }
+   void invoke() const
    {
       ++callStream().callsCounter();
-      // Invoke wrapper which will call the target api
+      // Go through the type-erased functor
       (*m_ucall)(*this);
-      fulfillReserved();
+      // WOX fulfillReserved();
    }
-   void aliasTrackable(std::string objectKey, std::shared_ptr<ITrackable> pTrackable) const
+   void swizzle(std::string objectKey, std::shared_ptr<ITrackable> pTrackable) const
    {
       // Associate key from file with corresponding live object just created.
-      callStream().aliased()[objectKey] = pTrackable;
+      callStream().swizzled()[objectKey] = pTrackable;
    }
-   std::shared_ptr<ITrackable> unaliasTrackable(std::string aliasedKey) const
-   {
-      // Get live object given key from file.
-      auto ret = unaliasTrackableSafely(aliasedKey);
-      Assert(!!ret, Assertions_NoSuchTrackable);
-      return ret;
-   }
-   std::shared_ptr<ITrackable> unaliasTrackableSafely(std::string aliasedKey) const
+   std::shared_ptr<ITrackable> unswizzle(std::string swizzleKey) const
    {
       // Get live object given key from file. Don't throw. Let error be forced by caller.
       std::shared_ptr<ITrackable> ret;
-      auto live = callStream().aliased().find(aliasedKey);
-      if (callStream().aliased().end() != live)
+      auto live = callStream().swizzled().find(swizzleKey);
+      if (callStream().swizzled().end() != live)
          ret = live->second;
       return ret;
    }
-   void aliasURN(std::string ssLiveURN, std::string ssMemorexURN) const
+   void bindURN(std::string ssLiveURN, std::string ssMemorexURN) const
    {
       // empty string maps to empty string
       if (!ssLiveURN.empty())
       {
          // If create a repository on playback, branch URN will not be the same. Account for that.
-         callStream().aliasedURNs()[ssMemorexURN] = ssLiveURN;
+         callStream().urnBindings()[ssMemorexURN] = ssLiveURN;
       }
    }
-   std::string unaliasURN(std::string ssMemorexURN) const
+   std::string unbindURN(std::string ssMemorexURN) const
    {
       // empty string maps to empty string
       if (ssMemorexURN.empty())
          return ssMemorexURN;
       // We need the live branch URN given original branch URN from file.
-      auto live = callStream().aliasedURNs().find(ssMemorexURN);
-      Assert(callStream().aliasedURNs().end() != live, Assertions_NoSuchURN);
+      auto live = callStream().urnBindings().find(ssMemorexURN);
+      Assert(callStream().urnBindings().end() != live, Assertions_NoSuchURN);
       return live->second;
    }
    void functionReturn(std::string) const
@@ -132,14 +137,6 @@ public:
    {}
    void functionReturn(std::vector<std::string>) const
    {}
-   void fulfillReserved() const
-   {
-      Assert(
-         m_reserve.size() == m_fulfill.size()
-         , Assertions_UnmatchedFulfillVersusReserve);
-      for (size_t ii = 0; ii < m_reserve.size(); ii++)
-         aliasTrackable(m_reserve[ii], m_fulfill[ii]);
-   }
 #if WOX
    void compareBeforeAndAfter(bool bMemorex, bool bLive) const
    {

@@ -39,13 +39,13 @@ public:
       // scan
       ar.popHeader();
       // execute
-      ar.invokeTargetApi();
+      ar.invoke();
    }
 
    void startPlayback(std::shared_ptr<ITrackable> pIMain)
    {
       callStream().onStartPlayback();
-      callStream().aliased()[callStream().mainId()] = pIMain;
+      callStream().swizzled()[callStream().mainId()] = pIMain;
    }
    void finishPlayback()
    {
