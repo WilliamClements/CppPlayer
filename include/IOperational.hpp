@@ -4,7 +4,7 @@
 
 #pragma once
 
-// ICallable.hpp
+// IOperational.hpp
 
 #include <functional>
 #include "IPlayer.hpp"
@@ -24,27 +24,24 @@ using ICallableCallback
    = std::function<void(std::shared_ptr<std::exception>)>;
 
 // Root class enabling automation wrappers to be written
-class ICallable : public ITrackable, public std::enable_shared_from_this<ICallable>
+class IOperational : public ITrackable, public std::enable_shared_from_this<IOperational>
 {
    // Construction
 public:
-   ICallable()
+   IOperational()
    {}
-   virtual ~ICallable() = 0
+   virtual ~IOperational() = 0
    {}
 
    // Methods
 public:
    // The derived I-classes use "recordCppCall" to trigger recording for each call.
-   template<class ITarget, bool returnsValue, int numArg, typename... Args>
-   void recordCppCall(const CppCall<ITarget, returnsValue, numArg>& cc, Args... args) const
-   {
-      if (recording())
-         recorder().recordCppCall<ITarget>(
-            cc.api()
-            , std::dynamic_pointer_cast<const ITarget>(shared_from_this())
-            , args...);
-   }
+   template<typename... Args>
+   void recordFunction(Args...) const
+   {}
+   template<typename... Args>
+   void recordMethod(Args...) const
+   {}
 
    // Utilities
 protected:

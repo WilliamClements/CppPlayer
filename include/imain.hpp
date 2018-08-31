@@ -8,7 +8,7 @@
 
 #include "CppPlayer.hpp"
 #include "CppRecorder.hpp"
-#include "ICallable.hpp"
+#include "IOperational.hpp"
 #include "NamespaceAliases.hpp"
 
 enum IMain_Start_Flags
@@ -18,16 +18,16 @@ enum IMain_Start_Flags
    , Do_Playback = 0x4
 };
 
-class IMain : public ICallable
+class IMain : public IOperational
 {
-   CppPlayer           Player;
-   CppRecorder         Recorder;
+   CppPlayer               Player;
+   CppRecorder             Recorder;
    unsigned int            StartFlags;
    fs::path                FilePath;
 
    // Construction
 public:
-   IMain()
+   IMain(CallMap&)
    {
       p_player() = &Player;
       p_recorder() = &Recorder;

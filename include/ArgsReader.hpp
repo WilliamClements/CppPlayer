@@ -59,6 +59,10 @@ public:
       return *this;
    }
 
+   template<typename X>
+   void functionReturn(X) const
+   {}
+
 public:
    int64_t popInt() const
    {
@@ -110,7 +114,7 @@ public:
          ret = live->second;
       return ret;
    }
-   void aliasURN(std::string ssLiveURN, std::string ssMemorexURN) const
+   void bindURN(std::string ssLiveURN, std::string ssMemorexURN) const
    {
       // empty string maps to empty string
       if (!ssLiveURN.empty())
@@ -119,7 +123,7 @@ public:
          callStream().aliasedURNs()[ssMemorexURN] = ssLiveURN;
       }
    }
-   std::string unaliasURN(std::string ssMemorexURN) const
+   std::string unbindURN(std::string ssMemorexURN) const
    {
       // empty string maps to empty string
       if (ssMemorexURN.empty())

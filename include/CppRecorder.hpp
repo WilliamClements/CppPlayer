@@ -65,3 +65,5 @@ public:
    }
 };
 
+#define AddToMap(CLASSNAME, APINAME)          \
+static const int capture_ ## APINAME = 0;
