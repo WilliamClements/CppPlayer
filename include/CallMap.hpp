@@ -21,10 +21,10 @@ using Calls = std::unordered_map<std::string, TypeErased, std::hash<std::string>
 class CallMap final
 {
 public:
-   Calls              m_theMap;
-   unsigned int       StartFlags;
-   CppPlayer*         m_pPlayer;
-   CppRecorder*       m_pRecorder;
+   Calls                            m_theMap;
+   unsigned int                     StartFlags;
+   std::weak_ptr<CppPlayer>         m_pPlayer;
+   std::weak_ptr<CppRecorder>       m_pRecorder;
 
    CallMap()
       : m_theMap()
@@ -33,20 +33,25 @@ public:
       , m_pRecorder()
    {}
 
-   void onStart(CppPlayer& player, CppRecorder& recorder)
+   void clear()
    {
-      m_pPlayer = &player;
-      m_pRecorder = &recorder;
+      m_theMap.clear();
+   }
+
+   void onStart(std::shared_ptr<CppPlayer> player, std::shared_ptr<CppRecorder> recorder)
+   {
+      m_pPlayer = player;
+      m_pRecorder = recorder;
    }
 
    CppPlayer& player()
    {
-      return *m_pPlayer;
+      return *m_pPlayer.lock();
    }
 
    CppRecorder& recorder()
    {
-      return *m_pRecorder;
+      return *m_pRecorder.lock();
    }
 
    TypeErased& lookupMethod(std::string apiname)

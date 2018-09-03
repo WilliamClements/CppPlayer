@@ -21,20 +21,25 @@ enum IMain_Start_Flags
 class IMain : public IOperational
 {
 protected:
-   CallMap&            m_callMap;
-   CppPlayer           Player;
-   CppRecorder         Recorder;
-   fs::path            FilePath;
+   CallMap&                            m_callMap;
+   std::shared_ptr<CppPlayer>          Player;
+   std::shared_ptr<CppRecorder>        Recorder;
+   fs::path                            FilePath;
 
    // Construction
 public:
    IMain(CallMap& callMap)
       : m_callMap(callMap)
-      , Player { callMap }
-      , Recorder{ callMap }
-   {}
-   virtual ~IMain() = 0
-   {}
+      , Player()
+      , Recorder()
+   {
+      Player = std::make_shared<CppPlayer>(m_callMap);
+      Recorder = std::make_shared<CppRecorder>(m_callMap);
+   }
+   virtual ~IMain()
+   {
+      m_callMap.clear();
+   }
 
    unsigned int& StartFlags()
    {
@@ -43,6 +48,7 @@ public:
    void startCpp(unsigned int nFlags)
    {
       StartFlags() = nFlags;
+      m_callMap.onStart(Player, Recorder);
    }
    void recordCpp(std::string filename)
    {
@@ -54,7 +60,7 @@ public:
       bool bExists = fs::exists(FilePath);
       Assert(!bExists, Assertions_FileCannotBeCreated);
 
-      Recorder.startRecording(FilePath);
+      Recorder->startRecording(FilePath);
    }
    void playbackCpp(std::string filename)
    {
@@ -66,11 +72,11 @@ public:
       bool bExists = fs::exists(FilePath);
       Assert(bExists, Assertions_FileDoesNotExist);
 
-      Player.playbackCppCalls(FilePath, shared_from_this());
+      Player->playbackCppCalls(FilePath, shared_from_this());
    }
    void finishCpp()
    {
-      Recorder.finishRecording(objectKey);
-      Player.finishPlayback();
+      Recorder->finishRecording(objectKey);
+      Player->finishPlayback();
    }
 };

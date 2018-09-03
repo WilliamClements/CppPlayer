@@ -46,7 +46,6 @@ public:
    {}
 
    IIo& io()                         { return *m_io.get(); }
-   Swizzled& swizzled()              { return m_Swizzled; }
    URNbindings& urnBindings()        { return m_urnBindings; }
    uint64_t& callsCounter()          { return m_u64CallsCounter; }
    std::string& mainId()             { return m_mainId; }
@@ -65,6 +64,20 @@ public:
       startStreaming();
       m_fileheader.m_startTime = std::chrono::system_clock::now();
       m_io->startRecording();
+   }
+   void deswizzle(const std::string objectKey, const std::shared_ptr<ITrackable> pTrackable)
+   {
+      // Associate key from file with corresponding live object just created.
+      m_Swizzled[objectKey] = pTrackable;
+   }
+   std::shared_ptr<ITrackable> beswizzle(std::string swizzleKey) const
+   {
+      // Get live object given key from file. Don't throw. Let error be forced by caller.
+      std::shared_ptr<ITrackable> ret;
+      auto live = m_Swizzled.find(swizzleKey);
+      if (m_Swizzled.end() != live)
+         ret = live->second;
+      return ret;
    }
    void finishRecording(std::string mainId, fs::path outputfilepath)
    {

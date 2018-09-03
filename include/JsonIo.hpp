@@ -207,13 +207,35 @@ public:
       assert(target.IsDouble());
       return target.GetDouble();
    }
-   ReturnValue popVariant() const override
+   ReturnVariant popVariant() const override
    {
+      ReturnVariant ret;
       rapidjson::Value target;
       playData().popValue(&target);
       if (target.IsArray())
-         assert(target.IsDouble());
-      return ReturnValue();
+      {
+         std::vector<std::string> unpack;
+         for (auto& member : target.GetArray())
+         {
+            Assert(member.IsString(), Assertions_UnsupportedArgumentType);
+            unpack.push_back(member.GetString());
+         }
+         ret = unpack;
+      }
+      else if (target.IsString())
+      {
+         ret = target.GetString();
+      }
+      else if (target.IsDouble())
+      {
+         ret = target.GetDouble();
+      }
+      else if (target.IsInt64())
+      {
+         ret = target.GetInt64();
+      }
+      Assert(!std::holds_alternative<std::monostate>(ret), Assertions_UnsupportedArgumentType);
+      return ret;
    }
 
    static std::string formatTime(time_point tp)
