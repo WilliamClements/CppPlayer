@@ -47,9 +47,9 @@ public:
    }
    void finishPlayback()
    {
-      CppCallInfo::reportInfo(Err(0), "entering finishPlayback .. destroy m_PlaybackState\n");
+      logPlayerDiagnostic("entering finishPlayback .. destroy m_PlaybackState\n");
       callStream().finishPlayback();
-      CppCallInfo::reportInfo(Err(0), "continuing finishPlayback .. destroy callStream()\n");
-      CppCallInfo::reportInfo(Err(0), "exited finishPlayback\n");
+      logPlayerDiagnostic("continuing finishPlayback .. destroy callStream()\n");
+      logPlayerDiagnostic("exited finishPlayback\n");
    }
 };

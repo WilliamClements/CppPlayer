@@ -74,34 +74,21 @@ inline void failUnlessPredicate(bool bPredicate, Assertions err, std::string ssI
       fail(err, ssId);
 }
 
-class CppCallInfo final
+inline void Assert(bool bPredicate, Assertions err, std::string ssId = "")
 {
-public:
-   inline static void reportInfo(Err, std::string ss)
-   {
-      std::cout << ss.c_str() << std::endl;
-   }
-   inline static void reportError(const char* operation, const std::shared_ptr<std::exception>& sException)
-   {
-      const auto* pE = sException.get();
-      if (!pE)
-      {
-         // This should never happen...but if we are crashing,
-         // try not to make matters worse
-         reportInfo(Err(0), "Lynx: reportError -- Why no std::exception object?\n");
-      }
-      else
-      {
-         reportError(operation, *sException);
-      }
-   }
-   inline void static reportError(const char* operation, const std::exception& error)
-   {
-      std::string ss;
-      ss += "Failed to ";
-      ss += operation;
-      ss += " because ";
-      ss += error.what();
-      reportInfo(Err(1), ss);
-   }
-};
+   if (!bPredicate)
+      fail(err, ssId);
+}
+inline void logPlayerDiagnostic(std::string ss)
+{
+   std::cout << ss.c_str() << std::endl;
+}
+inline void logPlayerException(const char* operation, const std::exception& error)
+{
+   std::string ss;
+   ss += "Failed to ";
+   ss += operation;
+   ss += " because ";
+   ss += error.what();
+   logPlayerDiagnostic(ss);
+}

@@ -36,9 +36,11 @@ public:
    // Methods
 public:
    // The derived I-classes use "recordCppCall" to trigger recording for each call.
-   template<typename... Args>
-   void recordFunction(Args...) const
-   {}
+   template<typename ReturnType, typename... Args>
+   ReturnType recordFunction(int, ReturnType retValue, Args...) const
+   {
+      return retValue;
+   }
    template<typename... Args>
    void recordMethod(Args...) const
    {}
