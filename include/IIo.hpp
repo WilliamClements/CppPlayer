@@ -11,17 +11,20 @@
 #include "NamespaceAliases.hpp"
 #include <variant>
 
+class ITrackable;
+
 using time_point = std::chrono::system_clock::time_point;
 using PlayerOfOneCall = std::function<void(int nFields)>;
 using OnStartPlaying = std::function<void()>;
 
-using ReturnValue =
+using ReturnVariant =
 std::variant<
    std::monostate
-   , int
+   , int64_t
    , double
    , std::string
    , std::vector<std::string>
+   , std::shared_ptr<ITrackable>
 >;
 
 struct CppFileHeader
@@ -57,5 +60,5 @@ public:
    virtual int64_t             popInt() const = 0;
    virtual std::string         popString() const = 0;
    virtual double              popDouble() const = 0;
-   virtual ReturnValue         popVariant() const = 0;
+   virtual ReturnVariant         popVariant() const = 0;
 };

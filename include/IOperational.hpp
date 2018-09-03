@@ -23,28 +23,34 @@ public:
 
    // Methods
 public:
-   // The derived I-classes use "recordCall" to trigger recording for each call.
-   template<class ITarget, typename... Args>
-   void recordFunction(const CppCall<ITarget>& cc, Args... args) const
+   // Derived wrapper classes use "recordFunction" or "recordMethod" to
+   // trigger recording for each call.
+   template<class ITarget, typename ReturnType, typename... Args>
+   ReturnType recordFunction(const CppCall<ITarget>& cc, ReturnType retValue, Args... args) const
    {
-      recordCall(ITarget::libraryCallMap(), cc, true, args...);
+      auto& callMap = ITarget::libraryCallMap();
+      if (callMap.recorder().streaming())
+         recordCall(callMap, cc, true, retValue, args...);
+      return retValue;
    }
 
    template<class ITarget, typename... Args>
    void recordMethod(const CppCall<ITarget>& cc, Args... args) const
    {
-      recordCall(ITarget::libraryCallMap(), cc, false, args...);
+      auto& callMap = ITarget::libraryCallMap();
+      if (callMap.recorder().streaming())
+         recordCall(callMap, cc, false, 0, args...);
    }
 
 private:
-   template<class ITarget, typename... Args>
-   void recordCall(CallMap& callMap, const CppCall<ITarget>& cc, bool bReturnsValue, Args... args) const
+   template<class ITarget, typename ReturnType, typename... Args>
+   void recordCall(CallMap& callMap, const CppCall<ITarget>& cc, bool bReturnsValue, ReturnType retValue, Args... args) const
    {
-      if (callMap.recorder().streaming())
-         callMap.recorder().recordCall<ITarget>(
-            cc.m_api
-            , bReturnsValue
-            , std::dynamic_pointer_cast<const ITarget>(shared_from_this())
-            , args...);
+      callMap.recorder().recordCall<ITarget>(
+         cc.m_api
+         , bReturnsValue
+         , retValue
+         , std::dynamic_pointer_cast<const ITarget>(shared_from_this())
+         , args...);
    }
 };

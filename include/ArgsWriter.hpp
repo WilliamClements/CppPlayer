@@ -16,7 +16,6 @@ public:
    CallMap&                                  m_callMap;
 
 private:
-   bool                                      m_bReturnsValue;
    TypeErased*                               m_ucall;
    std::shared_ptr<const ITrackable>         m_pThisTarget;
    int                                       m_nArgsPushedSoFar;
@@ -25,7 +24,6 @@ public:
    explicit ArgsWriter(CallStream& callStream)
       : m_callStream(callStream)
       , m_callMap(callStream.m_callMap)
-      , m_bReturnsValue(false)
       , m_ucall()
       , m_pThisTarget()
       , m_nArgsPushedSoFar()
@@ -44,16 +42,23 @@ protected:
    }
 
 public:
-   ArgsWriter& pushHeader(std::string api, bool bReturnsValue, std::shared_ptr<const ITrackable> pThisTarget)
+   template<typename ReturnType>
+   ArgsWriter& pushHeader(
+      std::string api
+      , bool bReturnsValue
+      , ReturnType retValue
+      , std::shared_ptr<const ITrackable> pThisTarget)
    {
       // Finish initializing object
       m_ucall = &m_callMap.lookupMethod(api);
-      m_bReturnsValue = bReturnsValue;
       m_pThisTarget = pThisTarget;
       // Start recording call
       callStream().io().pushHeader();
       // Stream out api and target
-      pushArgs(api, int(m_bReturnsValue), getThisTarget());
+      pushArgs(api, int(bReturnsValue));
+      if (bReturnsValue)
+         pushArgs(retValue);
+      pushArgs(getThisTarget());
       return *this;
    }
 

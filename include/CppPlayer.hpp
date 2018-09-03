@@ -35,7 +35,7 @@ public:
    }
    void playbackOne()
    {
-      ArgsReader ar(callStream());
+      ArgsReader ar{ callStream() };
       // scan
       ar.popHeader();
       // execute
@@ -45,13 +45,13 @@ public:
    void startPlayback(std::shared_ptr<ITrackable> pIMain)
    {
       callStream().onStartPlayback();
-      callStream().swizzled()[callStream().mainId()] = pIMain;
+      callStream().deswizzle(callStream().mainId(), pIMain);
    }
    void finishPlayback()
    {
-      CppCallInfo::reportInfo(Err(0), "entering finishPlayback .. destroy m_PlaybackState\n");
+      logPlayerDiagnostic("entering finishPlayback .. destroy m_PlaybackState");
       callStream().finishPlayback();
-      CppCallInfo::reportInfo(Err(0), "continuing finishPlayback .. destroy callStream()\n");
-      CppCallInfo::reportInfo(Err(0), "exited finishPlayback\n");
+      logPlayerDiagnostic("continuing finishPlayback .. destroy callStream()");
+      logPlayerDiagnostic("exited finishPlayback");
    }
 };

@@ -24,8 +24,8 @@ enum Assertions
    , Assertions_WrongNumberOfFields
    , Assertions_InvalidPath
    , Assertions_NoSuchURN
-   , Assertions_UnmatchedFulfillVersusReserve
    , Assertions_TrackableMustBeNull
+   , Assertions_UnsupportedArgumentType
 
    // Catch-all, keep last
    , Assertions_OutOfSequence
@@ -41,7 +41,7 @@ inline void fail(Assertions err, std::string ssId)
    case Assertions_StartFlagsProblem:
       throw std::logic_error(base + "must specify supported flags for recording/playback");
    case Assertions_UnequalReturnResult:
-      throw std::logic_error(base + "result of operation different from recording to playback");
+      throw std::logic_error(base + "playback function return different from recording");
    case Assertions_DuplicateAPINames:
       throw std::logic_error(base + "only one entry should be registered per apiname");
    case Assertions_NoSuchAPIName:
@@ -60,8 +60,6 @@ inline void fail(Assertions err, std::string ssId)
       throw std::logic_error(base + "path cannot be correct");
    case Assertions_NoSuchURN:
       throw std::logic_error(base + "lookup URN failed; i.e. URN referenced before it was created");
-   case Assertions_UnmatchedFulfillVersusReserve:
-      throw std::logic_error(base + "tracking mismatch");
    case Assertions_TrackableMustBeNull:
       throw std::logic_error(base + "non-NULL trackable unexpected");
       // catch all...keep it last
@@ -77,35 +75,16 @@ inline void Assert(bool bPredicate, Assertions err, std::string ssId = "")
    if (!bPredicate)
       fail(err, ssId);
 }
-
-class CppCallInfo final
+inline void logPlayerDiagnostic(std::string ss)
 {
-public:
-   inline static void reportInfo(Err, std::string ss)
-   {
-      std::cout << ss.c_str() << std::endl;
-   }
-   inline static void reportError(const char* operation, const std::shared_ptr<std::exception>& sException)
-   {
-      const auto* pE = sException.get();
-      if (!pE)
-      {
-         // This should never happen...but if we are crashing,
-         // try not to make matters worse
-         reportInfo(Err(0), "Lynx: reportError -- Why no std::exception object?\n");
-      }
-      else
-      {
-         reportError(operation, *sException);
-      }
-   }
-   inline void static reportError(const char* operation, const std::exception& error)
-   {
-      std::string ss;
-      ss += "Failed to ";
-      ss += operation;
-      ss += " because ";
-      ss += error.what();
-      reportInfo(Err(1), ss);
-   }
-};
+   std::cout << ss.c_str() << std::endl;
+}
+inline void logPlayerException(const char* operation, const std::exception& error)
+{
+   std::string ss;
+   ss += "Failed to ";
+   ss += operation;
+   ss += " because ";
+   ss += error.what();
+   logPlayerDiagnostic(ss);
+}
