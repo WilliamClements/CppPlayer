@@ -23,11 +23,11 @@ class CallStream final
 {
 public:
    CallMap&                          m_callMap;
+
+private:
    uint64_t                          m_u64CallsCounter;
    URNbindings                       m_urnBindings;
    std::string                       m_mainId;
-
-private:
    std::unique_ptr<IIo>              m_io;
    CppFileHeader                     m_fileheader;
    Swizzled                          m_Swizzled;

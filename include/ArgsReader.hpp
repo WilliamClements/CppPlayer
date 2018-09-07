@@ -14,79 +14,73 @@
 
 class ArgsReader final
 {
-private:
    CallStream&                         m_callStream;
-   std::string                         m_api;
    CallMap&                            m_callMap;
-   mutable ReturnVariant               m_StreamVariant;
-   mutable ReturnVariant               m_LiveVariant;
+   std::string                         m_api;
    TypeErased*                         m_ucall;
    std::shared_ptr<ITrackable>         m_pThisTarget;
+   mutable ReturnVariant               m_StreamVariant;
+   mutable ReturnVariant               m_LiveVariant;
    mutable int                         m_nArgsPoppedSoFar;
 
 public:
    explicit ArgsReader(CallStream& callStream)
       : m_callStream(callStream)
-      , m_api()
       , m_callMap(callStream.m_callMap)
+      , m_api()
       , m_ucall()
       , m_pThisTarget()
+      , m_StreamVariant()
+      , m_LiveVariant()
       , m_nArgsPoppedSoFar()
    {}
    ~ArgsReader()
    {}
 
-protected:
-   CallStream& callStream() const
-   {
-      return m_callStream;
-   }
-
-public:
    std::shared_ptr<ITrackable> getThisTarget() const
    {
       return m_pThisTarget;
    }
+
    ArgsReader& popHeader()
    {
       m_ucall = &m_callMap.lookupMethod(m_api = popString());
       if (!!popInt())
          m_StreamVariant = popVariant();
       // Defer error reporting on target not found
-      m_pThisTarget = callStream().swizzle(popString());
+      m_pThisTarget = m_callStream.swizzle(popString());
       return *this;
    }
 
-public:
    int64_t popInt() const
    {
       ++m_nArgsPoppedSoFar;
-      return callStream().io().popInt();
+      return m_callStream.io().popInt();
    }
    std::string popString() const
    {
       ++m_nArgsPoppedSoFar;
-      return callStream().io().popString();
+      return m_callStream.io().popString();
    }
    double popDouble() const
    {
       ++m_nArgsPoppedSoFar;
-      return callStream().io().popDouble();
+      return m_callStream.io().popDouble();
    }
    std::vector<std::string> popStringVector() const
    {
       ++m_nArgsPoppedSoFar;
-      std::string stringlist = callStream().io().popString();
-      return callStream().recomposeStringVector(stringlist);
+      std::string stringlist = m_callStream.io().popString();
+      return m_callStream.recomposeStringVector(stringlist);
    }
    ReturnVariant popVariant() const
    {
       ++m_nArgsPoppedSoFar;
-      return callStream().io().popVariant();
+      return m_callStream.io().popVariant();
    }
    std::shared_ptr<ITrackable> popTrackable() const
    {
-      return callStream().swizzle(popString());
+      return m_callStream.swizzle(popString());
    }
    void reconcileVariants() const
    {
@@ -95,7 +89,7 @@ public:
       if (std::holds_alternative<std::shared_ptr<ITrackable>>(m_LiveVariant))
       {
          // Register function return's trackable
-         callStream().unswizzle(
+         m_callStream.unswizzle(
             std::get<std::string>(m_StreamVariant)
             , std::get<std::shared_ptr<ITrackable>>(m_LiveVariant));
          m_StreamVariant = m_LiveVariant;
@@ -103,7 +97,7 @@ public:
       else if (std::holds_alternative<std::vector<std::string>>(m_LiveVariant))
       {
          auto unpacked = std::get<std::string>(m_StreamVariant);
-         m_StreamVariant = callStream().recomposeStringVector(unpacked);
+         m_StreamVariant = m_callStream.recomposeStringVector(unpacked);
       }
    }
    void invoke() const
@@ -117,11 +111,11 @@ public:
    }
    void bindURN(std::string liveURN, std::string streamURN) const
    {
-      return callStream().bindURN(liveURN, streamURN);
+      return m_callStream.bindURN(liveURN, streamURN);
    }
    std::string unbindURN(std::string streamURN) const
    {
-      return callStream().unbindURN(streamURN);
+      return m_callStream.unbindURN(streamURN);
    }
    void functionReturn(std::string ss) const
    {
