@@ -25,23 +25,18 @@ public:
    CallMap&                          m_callMap;
 
 private:
-   uint64_t                          m_u64CallsCounter;
+   uint64_t                          m_u64CallsCounter = 0;
    URNbindings                       m_urnBindings;
    std::string                       m_mainId;
    std::unique_ptr<IIo>              m_io;
    CppFileHeader                     m_fileheader;
    Swizzled                          m_Swizzled;
-   uint64_t                          m_u64CallsPreRecorded;
+   uint64_t                          m_u64CallsPreRecorded = 0;
 
 public:
    CallStream(CallMap& callMap)
       : m_callMap(callMap)
-      , m_io()
-      , m_u64CallsCounter()
-      , m_u64CallsPreRecorded()
-      , m_mainId()
    {}
-
    ~CallStream()
    {}
 

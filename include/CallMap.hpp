@@ -22,15 +22,11 @@ class CallMap final
 {
 public:
    Calls                            m_theMap;
-   unsigned int                     StartFlags;
+   unsigned int                     StartFlags = 0;
    std::weak_ptr<CppPlayer>         m_pPlayer;
    std::weak_ptr<CppRecorder>       m_pRecorder;
 
    CallMap()
-      : m_theMap()
-      , StartFlags()
-      , m_pPlayer()
-      , m_pRecorder()
    {}
 
    void clear()

@@ -55,7 +55,7 @@ class JsonIo final : public IIo
    rapidjson::Value                 m_jsonBody;
    rapidjson::Value                 m_vCalls;
    rapidjson::Value                 m_currentCall;
-   int64_t                          m_callCounter;
+   int64_t                          m_callCounter = 0;
    std::unique_ptr<PlayData>        m_oPlayData;
 
 private:

@@ -21,20 +21,12 @@ class ArgsReader final
    std::shared_ptr<ITrackable>         m_pThisTarget;
    mutable ReturnVariant               m_StreamVariant;
    mutable ReturnVariant               m_LiveVariant;
-   mutable int                         m_nArgsPoppedSoFar;
+   mutable int                         m_nArgsPoppedSoFar = 0;
 
 public:
    explicit ArgsReader(CallStream& callStream)
       : m_callStream(callStream)
       , m_callMap(callStream.m_callMap)
-      , m_api()
-      , m_ucall()
-      , m_pThisTarget()
-      , m_StreamVariant()
-      , m_LiveVariant()
-      , m_nArgsPoppedSoFar()
-   {}
-   ~ArgsReader()
    {}
 
    std::shared_ptr<ITrackable> getThisTarget() const

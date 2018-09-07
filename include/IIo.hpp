@@ -31,7 +31,7 @@ struct CppFileHeader
 {
    time_point                  m_startTime;
    time_point                  m_finishTime;
-   uint64_t                    m_numCallsRecorded;
+   uint64_t                    m_numCallsRecorded = 0;
    std::string                 m_mainId;
 };
 
