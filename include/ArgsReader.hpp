@@ -22,11 +22,13 @@ class ArgsReader final
    mutable ReturnVariant               m_StreamVariant;
    mutable ReturnVariant               m_LiveVariant;
    mutable int                         m_nArgsPoppedSoFar = 0;
+   int                                 m_nFields = 0;
 
 public:
-   explicit ArgsReader(CallStream& callStream)
+   explicit ArgsReader(CallStream& callStream, int nFields)
       : m_callStream(callStream)
       , m_callMap(callStream.m_callMap)
+      , m_nFields(nFields)
    {}
 
    std::shared_ptr<ITrackable> getThisTarget() const
@@ -100,6 +102,8 @@ public:
       reconcileVariants();
       // Results same?
       Assert(m_LiveVariant == m_StreamVariant, Assertions_UnequalReturnResult);
+      // Did we use up the right number of args
+      Assert(m_nArgsPoppedSoFar == m_nFields, Assertions_WrongNumberOfFields);
    }
    void bindURN(std::string liveURN, std::string streamURN) const
    {
