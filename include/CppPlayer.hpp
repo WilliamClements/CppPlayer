@@ -24,17 +24,19 @@ public:
       callStream().io().playbackAll(
          filepath
          , [this, pRoot]()
-      {
-         this->startPlayback(pRoot);
-      }
+            {
+               this->startPlayback(pRoot);
+            }
          , [this](int nFields)
-      {
-         nFields;
-         this->playbackOne();
-      });
+            {
+               nFields;
+               this->playbackOne();
+            });
    }
    void playbackOne()
    {
+      callStream().popCall();
+
       ArgsReader ar{ callStream() };
       // scan
       ar.popHeader();
@@ -44,12 +46,10 @@ public:
 
    void startPlayback(std::shared_ptr<ITrackable> pIMain)
    {
-      callStream().onStartPlayback();
-      callStream().swizzle(callStream().mainId(), pIMain);
+      callStream().startPlayback(pIMain);
    }
    void finishPlayback()
    {
-      logPlayerDiagnostic("entered finishPlayback");
       callStream().finishPlayback();
    }
 };

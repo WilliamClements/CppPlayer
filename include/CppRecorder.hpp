@@ -7,7 +7,6 @@
 // CppRecorder.hpp - orchestrate recording
 
 #include "ArgsReader.hpp"
-#include "ArgsWriter.hpp"
 #include "CallStream.hpp"
 #include "IRecorder.hpp"
 #include "NamespaceAliases.hpp"
@@ -65,6 +64,7 @@ public:
    }
 };
 
+// This ties all the boilerplate together
 #define AddToMap(CLASSNAME, APINAME)                              \
 static inline CppCall<CLASSNAME> capture_ ## APINAME =            \
 { #CLASSNAME "::" #APINAME                                        \

@@ -53,7 +53,7 @@ public:
       if (!!popInt())
          m_StreamVariant = popVariant();
       // Defer error reporting on target not found
-      m_pThisTarget = callStream().beswizzle(popString());
+      m_pThisTarget = callStream().swizzle(popString());
       return *this;
    }
 
@@ -86,16 +86,16 @@ public:
    }
    std::shared_ptr<ITrackable> popTrackable() const
    {
-      return callStream().beswizzle(popString());
+      return callStream().swizzle(popString());
    }
    void reconcileVariants() const
    {
-      // Known cases where the type from the stream is different from
-      // actual data type
+      // Known cases where the function returned type from the stream is not a 
+      // simple serialization of actual data type
       if (std::holds_alternative<std::shared_ptr<ITrackable>>(m_LiveVariant))
       {
          // Register function return's trackable
-         callStream().deswizzle(
+         callStream().unswizzle(
             std::get<std::string>(m_StreamVariant)
             , std::get<std::shared_ptr<ITrackable>>(m_LiveVariant));
          m_StreamVariant = m_LiveVariant;
@@ -108,7 +108,6 @@ public:
    }
    void invoke() const
    {
-      ++callStream().callsCounter();
       logPlayerDiagnostic(m_api);
       // Go through the type-erased functor
       (*m_ucall)(*this);
@@ -116,24 +115,13 @@ public:
       // Results same?
       Assert(m_LiveVariant == m_StreamVariant, Assertions_UnequalReturnResult);
    }
-   void bindURN(std::string ssLiveURN, std::string ssStreamURN) const
+   void bindURN(std::string liveURN, std::string streamURN) const
    {
-      // empty string maps to empty string
-      if (!ssLiveURN.empty())
-      {
-         // If create a repository on playback, branch URN will not be the same. Account for that.
-         callStream().urnBindings()[ssStreamURN] = ssLiveURN;
-      }
+      return callStream().bindURN(liveURN, streamURN);
    }
-   std::string unbindURN(std::string ssStreamURN) const
+   std::string unbindURN(std::string streamURN) const
    {
-      // empty string maps to empty string
-      if (ssStreamURN.empty())
-         return ssStreamURN;
-      // We need the live branch URN given original branch URN from file.
-      auto live = callStream().urnBindings().find(ssStreamURN);
-      Assert(callStream().urnBindings().end() != live, Assertions_NoSuchURN);
-      return live->second;
+      return callStream().unbindURN(streamURN);
    }
    void functionReturn(std::string ss) const
    {
