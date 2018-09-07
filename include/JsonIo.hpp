@@ -4,7 +4,7 @@
 
 #pragma once
 
-// JsonIo.hpp
+// JsonIo.hpp - concrete JSON implementation of the IIo interface
 
 #include "Assertions.hpp"
 #include "IIo.hpp"

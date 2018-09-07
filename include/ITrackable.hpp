@@ -4,7 +4,7 @@
 
 #pragma once
 
-// ITrackable.hpp
+// ITrackable.hpp - keyed root class
 
 #include <atomic>
 #include <string>
@@ -12,7 +12,6 @@
 template<class ITarget>
 class CppCall;
 
-// Root keyed class 
 class ITrackable
 {
    // Construction

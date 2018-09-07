@@ -4,7 +4,7 @@
 
 #pragma once
 
-// CallStream.hpp
+// CallStream.hpp - abstraction for streaming calls in or out, including pointer swizzling
 
 #include "CallMap.hpp"
 #include "IIo.hpp"
@@ -23,13 +23,13 @@ class CallStream final
 {
 public:
    CallMap&                          m_callMap;
+   uint64_t                          m_u64CallsCounter;
 
 private:
    std::unique_ptr<IIo>              m_io;
    CppFileHeader                     m_fileheader;
    Swizzled                          m_Swizzled;
    URNbindings                       m_urnBindings;
-   uint64_t                          m_u64CallsCounter;
    uint64_t                          m_u64CallsPreRecorded;
    std::string                       m_mainId;
 
@@ -46,9 +46,6 @@ public:
    {}
 
    IIo& io()                         { return *m_io.get(); }
-   URNbindings& urnBindings()        { return m_urnBindings; }
-   uint64_t& callsCounter()          { return m_u64CallsCounter; }
-   std::string& mainId()             { return m_mainId; }
 
 public:
    bool streaming() const
@@ -65,12 +62,12 @@ public:
       m_fileheader.m_startTime = std::chrono::system_clock::now();
       m_io->startRecording();
    }
-   void deswizzle(const std::string objectKey, const std::shared_ptr<ITrackable> pTrackable)
+   void swizzle(const std::string objectKey, const std::shared_ptr<ITrackable> pTrackable)
    {
       // Associate key from file with corresponding live object just created.
       m_Swizzled[objectKey] = pTrackable;
    }
-   std::shared_ptr<ITrackable> beswizzle(std::string swizzleKey) const
+   std::shared_ptr<ITrackable> unswizzle(std::string swizzleKey) const
    {
       // Get live object given key from file. Don't throw. Let error be forced by caller.
       std::shared_ptr<ITrackable> ret;

@@ -4,7 +4,7 @@
 
 #pragma once
 
-// NamespaceAliases.hpp
+// NamespaceAliases.hpp - abbreviations, if any, for namespaces
 
 #include <experimental/filesystem>
 

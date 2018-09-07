@@ -4,7 +4,7 @@
 
 #pragma once
 
-// IPlayer.hpp
+// IPlayer.hpp - methods, if any, for a playing type of IAgent
 
 #include "IAgent.hpp"
 

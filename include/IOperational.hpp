@@ -4,14 +4,13 @@
 
 #pragma once
 
-// IOperational.hpp
+// IOperational.hpp - supports automation wrappers in derived classes
 
 #include <functional>
 #include "IPlayer.hpp"
 #include "IRecorder.hpp"
 #include "ITrackable.hpp"
 
-// Supports automation wrappers in derived classes
 class IOperational : public ITrackable, public std::enable_shared_from_this<IOperational>
 {
    // Construction

@@ -4,8 +4,9 @@
 
 #pragma once
 
-// ArgsWriter.hpp
+// ArgsWriter.hpp - process one call into recording stream
 
+#include "CallMap.hpp"
 #include "CallStream.hpp"
 #include "ITrackable.hpp"
 

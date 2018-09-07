@@ -4,7 +4,7 @@
 
 #pragma once
 
-// CppRecorder.hpp
+// CppRecorder.hpp - orchestrate recording
 
 #include "ArgsReader.hpp"
 #include "ArgsWriter.hpp"
