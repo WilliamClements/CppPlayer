@@ -12,11 +12,8 @@
 
 class ArgsWriter final
 {
-public:
    CallStream&                               m_callStream;
    CallMap&                                  m_callMap;
-
-private:
    TypeErased*                               m_ucall;
    std::shared_ptr<const ITrackable>         m_pThisTarget;
    int                                       m_nArgsPushedSoFar;
@@ -32,17 +29,6 @@ public:
    ~ArgsWriter()
    {}
 
-protected:
-   CallStream& callStream() const
-   {
-      return m_callStream;
-   }
-   std::shared_ptr<const ITrackable> getThisTarget()
-   {
-      return m_pThisTarget;
-   }
-
-public:
    template<typename ReturnType>
    ArgsWriter& pushHeader(
       std::string api
@@ -54,43 +40,43 @@ public:
       m_ucall = &m_callMap.lookupMethod(api);
       m_pThisTarget = pThisTarget;
       // Start recording call
-      callStream().io().pushHeader();
+      m_callStream.io().pushHeader();
       // Stream out api and target
       pushArgs(api, int(bReturnsValue));
       if (bReturnsValue)
          pushArgs(retValue);
-      pushArgs(getThisTarget());
+      pushArgs(m_pThisTarget);
       return *this;
    }
 
    // Record each argument according to its type
    ArgsWriter& pushArg(int64_t nIntItem)
    {
-      callStream().io().pushInt(nIntItem);
+      m_callStream.io().pushInt(nIntItem);
       ++m_nArgsPushedSoFar;
       return *this;
    }
    ArgsWriter& pushArg(int nIntItem)
    {
-      callStream().io().pushInt(nIntItem);
+      m_callStream.io().pushInt(nIntItem);
       ++m_nArgsPushedSoFar;
       return *this;
    }
    ArgsWriter& pushArg(unsigned int nIntItem)
    {
-      callStream().io().pushInt(nIntItem);
+      m_callStream.io().pushInt(nIntItem);
       ++m_nArgsPushedSoFar;
       return *this;
    }
    ArgsWriter& pushArg(std::string sStringItem)
    {
-      callStream().io().pushString(sStringItem);
+      m_callStream.io().pushString(sStringItem);
       ++m_nArgsPushedSoFar;
       return *this;
    }
    ArgsWriter& pushArg(double dDoubleItem)
    {
-      callStream().io().pushDouble(dDoubleItem);
+      m_callStream.io().pushDouble(dDoubleItem);
       ++m_nArgsPushedSoFar;
       return *this;
    }
@@ -100,7 +86,7 @@ public:
    }
    ArgsWriter& pushArg(const std::vector<std::string>& vStrings)
    {
-      return pushArg(callStream().breakStringVector(vStrings));
+      return pushArg(m_callStream.breakStringVector(vStrings));
    }
    ArgsWriter& pushArgs()
    {

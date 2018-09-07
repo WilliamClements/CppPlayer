@@ -51,16 +51,16 @@ public:
       : m_api(api)
    {
       // In this constructor run during static initialization, we register one functor into the map
-      TypeErased executeFun =
-         [fun](const ArgsReader& ar)
+      TypeErased ucall = [fun](const ArgsReader& ar)
       {
-         // Body of untargeted functor executed during playback
+         // Untargeted (type-erased) functor executed during playback
+         // (first step: become typeful)
          auto pThis = std::dynamic_pointer_cast<ITarget>(ar.getThisTarget());
          Assert(!!pThis.get(), Assertions_NoSuchTarget);
-         // Invoke targeted functor
+         // Invoke targeted (typeful) functor
          fun(*pThis.get(), ar);
       };
-      (void)ITarget::libraryCallMap().m_theMap.emplace(api, executeFun);
+      (void)ITarget::libraryCallMap().m_theMap.emplace(api, ucall);
    }
 };
 
