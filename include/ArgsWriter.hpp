@@ -28,7 +28,7 @@ class ArgsWriter final
 {
    CallStream&                               m_callStream;
    CallMap&                                  m_callMap;
-   TypeErased*                               m_ucall;
+   TypeErased*                               m_ucall = nullptr;
    std::shared_ptr<const ITrackable>         m_pThisTarget;
    int                                       m_nArgsPushedSoFar = 0;
 

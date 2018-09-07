@@ -31,7 +31,7 @@ class ArgsReader final
    CallStream&                         m_callStream;
    CallMap&                            m_callMap;
    std::string                         m_api;
-   TypeErased*                         m_ucall;
+   TypeErased*                         m_ucall = nullptr;
    std::shared_ptr<ITrackable>         m_pThisTarget;
    mutable ReturnVariant               m_StreamVariant;
    mutable ReturnVariant               m_LiveVariant;
