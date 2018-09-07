@@ -32,7 +32,7 @@ public:
       aw.pushHeader(api, returnsValue, retValue, pTrackable);
       // Push the arguments, in order
       aw.pushArgs(args...);
-      aw.pushCall();
+      callStream().pushCall();
    }
 };
 

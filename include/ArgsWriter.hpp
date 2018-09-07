@@ -102,12 +102,6 @@ public:
    {
       return pushArg(callStream().breakStringVector(vStrings));
    }
-   ArgsWriter& pushCall()
-   {
-      callStream().io().pushCurrentCall();
-      ++callStream().callsCounter();
-      return *this;
-   }
    ArgsWriter& pushArgs()
    {
       return *this;
