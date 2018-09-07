@@ -65,18 +65,12 @@ private:
    }
    static auto& json_allocator()
    {
-      static Allocator the;
-      return the;
+      static Allocator allor;
+      return allor;
    }
 
 public:
    JsonIo()
-      : m_dom()
-      , m_jsonHeader()
-      , m_jsonBody()
-      , m_vCalls()
-      , m_currentCall()
-      , m_callCounter()
    {
       m_dom.SetObject();
       m_jsonHeader.SetObject();
@@ -169,7 +163,7 @@ public:
    void pushString(std::string ss) override
    {
       rapidjson::Value item(ss, json_allocator());
-      m_currentCall.PushBack(item, json_allocator());
+      m_currentCall.PushBack(std::move(item), json_allocator());
    }
    void pushDouble(double dd) override
    {

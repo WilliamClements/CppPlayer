@@ -29,15 +29,14 @@ public:
             }
          , [this](int nFields)
             {
-               nFields;
-               this->playbackOne();
+               this->playbackOne(nFields);
             });
    }
-   void playbackOne()
+   void playbackOne(int nFields)
    {
       callStream().popCall();
 
-      ArgsReader ar{ callStream() };
+      ArgsReader ar{ callStream(), nFields };
       // scan
       ar.popHeader();
       // execute
