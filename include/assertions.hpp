@@ -4,12 +4,10 @@
 
 #pragma once
 
-// Assertions.hpp
+// Assertions.hpp - provide Assert function, explain specific error codes
 
 #include <iostream>
 #include <string>
-
-enum Err;
 
 enum Assertions
 {
@@ -33,8 +31,6 @@ enum Assertions
 
 inline void fail(Assertions err, std::string ssId)
 {
-   int golf = __cplusplus;
-   _tprintf(_T("hoo %d\n"), golf);
    std::string base = ssId + "/";
    switch (err)
    {

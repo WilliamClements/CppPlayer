@@ -4,7 +4,7 @@
 
 #pragma once
 
-// IMain.hpp
+// IMain.hpp -- sets up infrastructure for playing or recording
 
 #include "CppPlayer.hpp"
 #include "CppRecorder.hpp"

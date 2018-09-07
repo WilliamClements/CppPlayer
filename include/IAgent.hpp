@@ -4,7 +4,7 @@
 
 #pragma once
 
-// IAgent.hpp
+// IAgent.hpp - owns a stream (IPlayer or IRecorder)
 
 #include "CallStream.hpp"
 

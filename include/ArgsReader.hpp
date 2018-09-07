@@ -4,11 +4,12 @@
 
 #pragma once
 
-// ArgsReader.hpp
+// ArgsReader.hpp - process one call from playback stream
 
 #include "Assertions.hpp"
 #include "CallMap.hpp"
 #include "CallStream.hpp"
+#include "ITrackable.hpp"
 #include <vector>
 
 class ArgsReader final
@@ -17,7 +18,7 @@ private:
    CallStream&                         m_callStream;
    std::string                         m_api;
    CallMap&                            m_callMap;
-   ReturnVariant                       m_StreamVariant;
+   mutable ReturnVariant               m_StreamVariant;
    mutable ReturnVariant               m_LiveVariant;
    TypeErased*                         m_ucall;
    std::shared_ptr<ITrackable>         m_pThisTarget;
@@ -87,19 +88,33 @@ public:
    {
       return callStream().beswizzle(popString());
    }
-   void invoke() const
+   void reconcileVariants() const
    {
-      ++callStream().callsCounter();
-      // Go through the type-erased functor
-      (*m_ucall)(*this);
+      // Known cases where the type from the stream is different from
+      // actual data type
       if (std::holds_alternative<std::shared_ptr<ITrackable>>(m_LiveVariant))
+      {
          // Register function return's trackable
          callStream().deswizzle(
             std::get<std::string>(m_StreamVariant)
             , std::get<std::shared_ptr<ITrackable>>(m_LiveVariant));
-      else
-         // Results same?
-         Assert(m_LiveVariant == m_StreamVariant, Assertions_UnequalReturnResult);
+         m_StreamVariant = m_LiveVariant;
+      }
+      else if (std::holds_alternative<std::vector<std::string>>(m_LiveVariant))
+      {
+         auto unpacked = std::get<std::string>(m_StreamVariant);
+         m_StreamVariant = callStream().recomposeStringVector(unpacked);
+      }
+   }
+   void invoke() const
+   {
+      ++callStream().callsCounter();
+      logPlayerDiagnostic(m_api);
+      // Go through the type-erased functor
+      (*m_ucall)(*this);
+      reconcileVariants();
+      // Results same?
+      Assert(m_LiveVariant == m_StreamVariant, Assertions_UnequalReturnResult);
    }
    void bindURN(std::string ssLiveURN, std::string ssStreamURN) const
    {
@@ -127,10 +142,6 @@ public:
    void functionReturn(int64_t n64) const
    {
       m_LiveVariant = n64;
-   }
-   void functionReturn(Err ee) const
-   {
-      m_LiveVariant = int64_t(ee);
    }
    void functionReturn(std::shared_ptr<ITrackable> pTrackable) const
    {

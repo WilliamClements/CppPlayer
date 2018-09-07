@@ -4,7 +4,7 @@
 
 #pragma once
 
-// IRecorder.hpp
+// IRecorder.hpp - methods, if any, for a recording type of IAgent
 
 #include "ArgsWriter.hpp"
 #include "IAgent.hpp"

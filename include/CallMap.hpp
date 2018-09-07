@@ -4,7 +4,7 @@
 
 #pragma once
 
-// CallMap.hpp
+// CallMap.hpp - provide map of instrumented api calls
 
 #include "Assertions.hpp"
 #include <functional>
