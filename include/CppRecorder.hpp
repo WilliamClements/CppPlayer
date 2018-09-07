@@ -20,8 +20,6 @@ public:
       : IRecorder{ callMap }
       , m_outputfilepath()
    {}
-   ~CppRecorder()
-   {}
 
    // Methods
 public:

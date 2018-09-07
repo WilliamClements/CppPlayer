@@ -16,17 +16,12 @@ class ArgsWriter final
    CallMap&                                  m_callMap;
    TypeErased*                               m_ucall;
    std::shared_ptr<const ITrackable>         m_pThisTarget;
-   int                                       m_nArgsPushedSoFar;
+   int                                       m_nArgsPushedSoFar = 0;
 
 public:
    explicit ArgsWriter(CallStream& callStream)
       : m_callStream(callStream)
       , m_callMap(callStream.m_callMap)
-      , m_ucall()
-      , m_pThisTarget()
-      , m_nArgsPushedSoFar()
-   {}
-   ~ArgsWriter()
    {}
 
    template<typename ReturnType>
