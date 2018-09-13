@@ -30,7 +30,7 @@ class ArgsWriter final
    CallMap&                                  m_callMap;
    TypeErased*                               m_ucall = nullptr;
    std::shared_ptr<const ITrackable>         m_pThisTarget;
-   int                                       m_nArgsPushedSoFar = 0;
+   int                                       m_nPushed = 0;
 
 public:
    explicit ArgsWriter(CallStream& callStream)
@@ -58,35 +58,42 @@ public:
       return *this;
    }
 
+   template<typename... Args>
+   void pushArgs(Args&&... args)
+   {
+      // unary right fold 
+      (pushArg(args), ...);
+   }
+
    // Record each argument according to its type
    ArgsWriter& pushArg(int64_t nIntItem)
    {
       m_callStream.io().pushInt(nIntItem);
-      ++m_nArgsPushedSoFar;
+      ++m_nPushed;
       return *this;
    }
    ArgsWriter& pushArg(int nIntItem)
    {
       m_callStream.io().pushInt(nIntItem);
-      ++m_nArgsPushedSoFar;
+      ++m_nPushed;
       return *this;
    }
    ArgsWriter& pushArg(unsigned int nIntItem)
    {
       m_callStream.io().pushInt(nIntItem);
-      ++m_nArgsPushedSoFar;
+      ++m_nPushed;
       return *this;
    }
    ArgsWriter& pushArg(std::string sStringItem)
    {
       m_callStream.io().pushString(sStringItem);
-      ++m_nArgsPushedSoFar;
+      ++m_nPushed;
       return *this;
    }
    ArgsWriter& pushArg(double dDoubleItem)
    {
       m_callStream.io().pushDouble(dDoubleItem);
-      ++m_nArgsPushedSoFar;
+      ++m_nPushed;
       return *this;
    }
    ArgsWriter& pushArg(std::shared_ptr<const ITrackable> pTrackable)
@@ -96,24 +103,5 @@ public:
    ArgsWriter& pushArg(const std::vector<std::string>& vStrings)
    {
       return pushArg(m_callStream.breakStringVector(vStrings));
-   }
-   ArgsWriter& pushArgs()
-   {
-      return *this;
-   }
-
-   template<class Arg>
-   ArgsWriter& pushArgs(Arg arg)
-   {
-      pushArg(arg);
-      return *this;
-   }
-
-   template<class Head, class... Tail>
-   ArgsWriter& pushArgs(Head const& head, Tail const&... tails)
-   {
-      pushArgs(head);
-      pushArgs(tails...);
-      return *this;
    }
 };

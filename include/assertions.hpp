@@ -23,24 +23,24 @@ limitations under the License.
 #include <iostream>
 #include <string>
 
-enum Assertions
+enum class Assertions
 {
-   Assertions_UnequalReturnResult
-   , Assertions_DuplicateAPINames
-   , Assertions_NoSuchAPIName
-   , Assertions_StartFlagsProblem
-   , Assertions_FileCannotBeCreated
-   , Assertions_FileDoesNotExist
-   , Assertions_NoSuchTarget
-   , Assertions_NoSuchTrackable
-   , Assertions_WrongNumberOfFields
-   , Assertions_InvalidPath
-   , Assertions_NoSuchURN
-   , Assertions_TrackableMustBeNull
-   , Assertions_UnsupportedArgumentType
+   UnequalReturnResult
+   , DuplicateAPINames
+   , NoSuchAPIName
+   , StartFlagsProblem
+   , FileCannotBeCreated
+   , FileDoesNotExist
+   , NoSuchTarget
+   , NoSuchTrackable
+   , WrongNumberOfFields
+   , InvalidPath
+   , NoSuchURN
+   , TrackableMustBeNull
+   , UnsupportedArgumentType
 
    // Catch-all, keep last
-   , Assertions_OutOfSequence
+   , OutOfSequence
 };
 
 inline void fail(Assertions err, std::string ssId)
@@ -48,32 +48,32 @@ inline void fail(Assertions err, std::string ssId)
    std::string base = ssId + "/";
    switch (err)
    {
-   case Assertions_StartFlagsProblem:
+   case Assertions::StartFlagsProblem:
       throw std::logic_error(base + "must specify supported flags for recording/playback");
-   case Assertions_UnequalReturnResult:
+   case Assertions::UnequalReturnResult:
       throw std::logic_error(base + "playback function return different from recording");
-   case Assertions_DuplicateAPINames:
+   case Assertions::DuplicateAPINames:
       throw std::logic_error(base + "only one entry should be registered per apiname");
-   case Assertions_NoSuchAPIName:
+   case Assertions::NoSuchAPIName:
       throw std::logic_error(base + "api name lookup failed, did you forget to register a entry for it?");
-   case Assertions_FileCannotBeCreated:
+   case Assertions::FileCannotBeCreated:
       throw std::logic_error(base + "recording file could not be created");
-   case Assertions_FileDoesNotExist:
+   case Assertions::FileDoesNotExist:
       throw std::logic_error(base + "playback file does not exist");
-   case Assertions_NoSuchTarget:
+   case Assertions::NoSuchTarget:
       throw std::logic_error(base + "lookup target failed; i.e. target referenced before it was created");
-   case Assertions_NoSuchTrackable:
+   case Assertions::NoSuchTrackable:
       throw std::logic_error(base + "lookup trackable failed; i.e. trackable referenced before it was created");
-   case Assertions_WrongNumberOfFields:
+   case Assertions::WrongNumberOfFields:
       throw std::logic_error(base + "wrong number of fields pushed or popped");
-   case Assertions_InvalidPath:
+   case Assertions::InvalidPath:
       throw std::logic_error(base + "path cannot be correct");
-   case Assertions_NoSuchURN:
+   case Assertions::NoSuchURN:
       throw std::logic_error(base + "lookup URN failed; i.e. URN referenced before it was created");
-   case Assertions_TrackableMustBeNull:
+   case Assertions::TrackableMustBeNull:
       throw std::logic_error(base + "non-NULL trackable unexpected");
       // catch all...keep it last
-   case Assertions_OutOfSequence:
+   case Assertions::OutOfSequence:
       throw std::logic_error(base + "playback sequence did not match recording");
    default:
       throw std::logic_error(base + "please add a description for this error");
@@ -85,16 +85,16 @@ inline void Assert(bool bPredicate, Assertions err, std::string ssId = "")
    if (!bPredicate)
       fail(err, ssId);
 }
-inline void logPlayerDiagnostic(std::string ss)
+inline void logPlayerDiagnostic(std::string msg)
 {
-   std::cout << ss.c_str() << std::endl;
+   std::cout << msg.c_str() << std::endl;
 }
 inline void logPlayerException(const char* operation, const std::exception& error)
 {
-   std::string ss;
-   ss += "Failed to ";
-   ss += operation;
-   ss += " because ";
-   ss += error.what();
-   logPlayerDiagnostic(ss);
+   std::string msg;
+   msg += "Failed to ";
+   msg += operation;
+   msg += " because ";
+   msg += error.what();
+   logPlayerDiagnostic(msg);
 }

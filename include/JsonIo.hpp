@@ -107,16 +107,12 @@ public:
    }
    void setFileHeader(CppFileHeader header) override
    {
-      rapidjson::Value startTime(formatTime(header.m_startTime), json_allocator());
-      rapidjson::Value finishTime(formatTime(header.m_finishTime), json_allocator());
-      rapidjson::Value numRecorded;
-      numRecorded.SetInt64(header.m_numCallsRecorded);
-      rapidjson::Value mainId(header.m_mainId, json_allocator());
-
-      m_dom["Header"].AddMember(rapidjson::Value("Start Time"), startTime, json_allocator());
-      m_dom["Header"].AddMember(rapidjson::Value("Finish Time"), finishTime, json_allocator());
-      m_dom["Header"].AddMember(rapidjson::Value("Record Count"), numRecorded, json_allocator());
-      m_dom["Header"].AddMember(rapidjson::Value("Main"), mainId, json_allocator());
+      auto [tStart, tFinish, nRecords, mainId] = header;
+      
+      m_dom["Header"].AddMember(rapidjson::Value("Start Time")       , rapidjson::Value(formatTime(tStart), json_allocator()), json_allocator());
+      m_dom["Header"].AddMember(rapidjson::Value("Finish Time")      , rapidjson::Value(formatTime(tFinish), json_allocator()), json_allocator());
+      m_dom["Header"].AddMember(rapidjson::Value("Record Count")     , rapidjson::Value().SetInt64(nRecords), json_allocator());
+      m_dom["Header"].AddMember(rapidjson::Value("Main")             , rapidjson::Value(mainId, json_allocator()), json_allocator());
    }
    void startRecording() override
    {
@@ -171,7 +167,6 @@ public:
    {
       rapidjson::Value item;
       item.SetInt64(nn);
-
       m_currentCall.PushBack(std::move(item), json_allocator());
    }
    void pushString(std::string ss) override
@@ -183,7 +178,6 @@ public:
    {
       rapidjson::Value item;
       item.SetDouble(dd);
-
       m_currentCall.PushBack(std::move(item), json_allocator());
    }
    void pushCurrentCall() override
@@ -225,7 +219,7 @@ public:
          std::vector<std::string> unpack;
          for (auto& member : target.GetArray())
          {
-            Assert(member.IsString(), Assertions_UnsupportedArgumentType);
+            Assert(member.IsString(), Assertions::UnsupportedArgumentType);
             unpack.push_back(member.GetString());
          }
          ret = unpack;
@@ -242,7 +236,7 @@ public:
       {
          ret = target.GetInt64();
       }
-      Assert(!std::holds_alternative<std::monostate>(ret), Assertions_UnsupportedArgumentType);
+      Assert(!std::holds_alternative<std::monostate>(ret), Assertions::UnsupportedArgumentType);
       return ret;
    }
 
@@ -269,7 +263,7 @@ public:
       filename += "\\";
       filename += filepath.filename().generic_string();
       errno_t bad = fopen_s(&fp, filename.c_str(), "wb"); // non-Windows use "w"
-      Assert(!bad, Assertions_FileCannotBeCreated, filename);
+      Assert(!bad, Assertions::FileCannotBeCreated, filename);
       // good open, continue
       char writeBuffer[65536];
       rapidjson::FileWriteStream os(fp, writeBuffer, sizeof(writeBuffer));
@@ -285,7 +279,7 @@ public:
       filename += "\\";
       filename += filepath.filename().generic_string();
       errno_t bad = fopen_s(&fp, filename.c_str(), "rb"); // non-Windows use "r"
-      Assert(!bad, Assertions_FileDoesNotExist, filename);
+      Assert(!bad, Assertions::FileDoesNotExist, filename);
       // good open, continue
       char readBuffer[65536];
       rapidjson::FileReadStream is(fp, readBuffer, sizeof(readBuffer));

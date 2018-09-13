@@ -68,7 +68,7 @@ public:
          // Untargeted (type-erased) functor executed during playback
          // (first step: become typeful)
          auto pThis = std::dynamic_pointer_cast<ITarget>(ar.getThisTarget());
-         Assert(!!pThis.get(), Assertions_NoSuchTarget);
+         Assert(!!pThis.get(), Assertions::NoSuchTarget);
          // Invoke targeted (typeful) functor
          fun(*pThis.get(), ar);
       };
