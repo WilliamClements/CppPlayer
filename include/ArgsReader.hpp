@@ -35,7 +35,7 @@ class ArgsReader final
    std::shared_ptr<ITrackable>         m_pThisTarget;
    mutable ReturnVariant               m_StreamVariant;
    mutable ReturnVariant               m_LiveVariant;
-   mutable int                         m_nArgsPoppedSoFar = 0;
+   mutable int                         m_nPopped = 0;
    int                                 m_nFields = 0;
 
 public:
@@ -62,28 +62,28 @@ public:
 
    int64_t popInt() const
    {
-      ++m_nArgsPoppedSoFar;
+      ++m_nPopped;
       return m_callStream.io().popInt();
    }
    std::string popString() const
    {
-      ++m_nArgsPoppedSoFar;
+      ++m_nPopped;
       return m_callStream.io().popString();
    }
    double popDouble() const
    {
-      ++m_nArgsPoppedSoFar;
+      ++m_nPopped;
       return m_callStream.io().popDouble();
    }
    std::vector<std::string> popStringVector() const
    {
-      ++m_nArgsPoppedSoFar;
+      ++m_nPopped;
       std::string stringlist = m_callStream.io().popString();
       return m_callStream.recomposeStringVector(stringlist);
    }
    ReturnVariant popVariant() const
    {
-      ++m_nArgsPoppedSoFar;
+      ++m_nPopped;
       return m_callStream.io().popVariant();
    }
    std::shared_ptr<ITrackable> popTrackable() const
@@ -115,9 +115,9 @@ public:
       (*m_ucall)(*this);
       reconcileVariants();
       // Results same?
-      Assert(m_LiveVariant == m_StreamVariant, Assertions_UnequalReturnResult);
+      Assert(m_LiveVariant == m_StreamVariant, Assertions::UnequalReturnResult);
       // Did we use up the right number of args
-      Assert(m_nArgsPoppedSoFar == m_nFields, Assertions_WrongNumberOfFields);
+      Assert(m_nPopped == m_nFields, Assertions::WrongNumberOfFields);
    }
    void bindURN(std::string liveURN, std::string streamURN) const
    {

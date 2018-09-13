@@ -67,7 +67,7 @@ public:
    TypeErased& lookupMethod(std::string apiname)
    {
       auto result = m_theMap.find(apiname);
-      Assert(m_theMap.end() != result, Assertions_NoSuchAPIName, apiname);
+      Assert(m_theMap.end() != result, Assertions::NoSuchAPIName, apiname);
       return result->second;
    }
 };

@@ -68,11 +68,11 @@ public:
    {
       Assert(
          !!(Do_Recording & StartFlags())
-         , Assertions_StartFlagsProblem);
+         , Assertions::StartFlagsProblem);
 
       FilePath = filename;
       bool bExists = fs::exists(FilePath);
-      Assert(!bExists, Assertions_FileCannotBeCreated);
+      Assert(!bExists, Assertions::FileCannotBeCreated);
 
       Recorder->startRecording(FilePath);
    }
@@ -80,11 +80,11 @@ public:
    {
       Assert(
          !!(Do_Playback & StartFlags())
-         , Assertions_StartFlagsProblem);
+         , Assertions::StartFlagsProblem);
 
       FilePath = filename;
       bool bExists = fs::exists(FilePath);
-      Assert(bExists, Assertions_FileDoesNotExist);
+      Assert(bExists, Assertions::FileDoesNotExist);
 
       Player->playbackCppCalls(FilePath, shared_from_this());
    }

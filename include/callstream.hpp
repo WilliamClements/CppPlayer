@@ -87,7 +87,7 @@ public:
          return streamURN;
       // We need the live branch URN given original branch URN from file.
       auto live = m_urnBindings.find(streamURN);
-      Assert(m_urnBindings.end() != live, Assertions_NoSuchURN);
+      Assert(m_urnBindings.end() != live, Assertions::NoSuchURN);
       return live->second;
    }
    void unswizzle(const std::string objectKey, const std::shared_ptr<ITrackable> pTrackable)
