@@ -56,6 +56,7 @@ public:
    }
 
 private:
+   // This rationalizes Function and Method 
    template<class ITarget, typename ReturnType, typename... Args>
    void recordCall(CallMap& callMap, const CppCall<ITarget>& cc, bool bReturnsValue, ReturnType retValue, Args... args) const
    {

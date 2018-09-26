@@ -32,6 +32,7 @@ class ITrackable
 public:
    ITrackable()
    {
+      // auto-generate key for this wrapper object
       static std::atomic_uint64_t serial = 1000000;
       objectKey = std::to_string(++serial);
    }

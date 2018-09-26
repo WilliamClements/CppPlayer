@@ -47,23 +47,19 @@ public:
    {
       m_theMap.clear();
    }
-
    void onStart(std::shared_ptr<CppPlayer> player, std::shared_ptr<CppRecorder> recorder)
    {
       m_pPlayer = player;
       m_pRecorder = recorder;
    }
-
    CppPlayer& player()
    {
       return *m_pPlayer.lock();
    }
-
    CppRecorder& recorder()
    {
       return *m_pRecorder.lock();
    }
-
    TypeErased& lookupMethod(std::string apiname)
    {
       auto result = m_theMap.find(apiname);

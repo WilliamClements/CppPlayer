@@ -33,6 +33,8 @@ public:
    virtual ~IRecorder() = 0
    {}
 
+   // Used by recordFunction and returnMethod, this adds a
+   // call to the stream.
    template<class ITarget, typename ReturnType, typename... Args>
    void recordCall(
       std::string api

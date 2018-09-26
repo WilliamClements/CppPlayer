@@ -45,7 +45,7 @@ public:
       , ReturnType retValue
       , std::shared_ptr<const ITrackable> pThisTarget)
    {
-      // Finish initializing object
+      // Finish initializing this object
       m_ucall = &m_callMap.lookupMethod(api);
       m_pThisTarget = pThisTarget;
       // Start recording call
