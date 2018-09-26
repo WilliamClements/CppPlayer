@@ -1,6 +1,6 @@
 /*
 
-Copyright 2018 Autodesk
+Copyright 2018 William Clements, Autodesk
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -47,23 +47,19 @@ public:
    {
       m_theMap.clear();
    }
-
    void onStart(std::shared_ptr<CppPlayer> player, std::shared_ptr<CppRecorder> recorder)
    {
       m_pPlayer = player;
       m_pRecorder = recorder;
    }
-
    CppPlayer& player()
    {
       return *m_pPlayer.lock();
    }
-
    CppRecorder& recorder()
    {
       return *m_pRecorder.lock();
    }
-
    TypeErased& lookupMethod(std::string apiname)
    {
       auto result = m_theMap.find(apiname);
