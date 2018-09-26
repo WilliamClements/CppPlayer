@@ -1,6 +1,6 @@
 /*
 
-Copyright 2018 Autodesk
+Copyright 2018 William Clements, Autodesk
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -56,6 +56,7 @@ public:
    }
 
 private:
+   // This rationalizes Function and Method 
    template<class ITarget, typename ReturnType, typename... Args>
    void recordCall(CallMap& callMap, const CppCall<ITarget>& cc, bool bReturnsValue, ReturnType retValue, Args... args) const
    {

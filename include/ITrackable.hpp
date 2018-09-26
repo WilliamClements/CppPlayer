@@ -1,6 +1,6 @@
 /*
 
-Copyright 2018 Autodesk
+Copyright 2018 William Clements, Autodesk
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -32,6 +32,7 @@ class ITrackable
 public:
    ITrackable()
    {
+      // auto-generate key for this wrapper object
       static std::atomic_uint64_t serial = 1000000;
       objectKey = std::to_string(++serial);
    }
