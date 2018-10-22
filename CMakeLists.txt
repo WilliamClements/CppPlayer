@@ -25,6 +25,9 @@ add_feature_info("Enable User Documentation" ENABLE_USER_DOC "Enables building t
 option(ENABLE_CPACK "Enable cpack" ON)
 add_feature_info("Enable cpack integration" ENABLE_CPACK "Enables producing of deb packages")
 
+option(ENABLE_SAMPLES "Enable build of samples" ON)
+add_feature_info("Enable samples build" ENABLE_CPACK "Enables build of samples")
+
 # Define GNU standard installation directories
 include(GNUInstallDirs)
 
@@ -71,4 +74,6 @@ if(ENABLE_CPACK)
 	include("CPack.cmake")
 endif()
 
-add_subdirectory("samples")
+if(ENABLE_SAMPLES)
+	add_subdirectory("samples")
+endif()
