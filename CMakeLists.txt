@@ -44,7 +44,7 @@ add_library(${TARGET} INTERFACE)
 # compiling the library, and will be added to consumers' build
 # paths.
 target_include_directories(${TARGET} INTERFACE
-		$<BUILD_INTERFACE:include>
+		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 		$<INSTALL_INTERFACE:include>
 		)
 
@@ -70,3 +70,5 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/CppPlayer.pc DESTINATION ${CMAKE_INSTA
 if(ENABLE_CPACK)
 	include("CPack.cmake")
 endif()
+
+add_subdirectory("samples")
