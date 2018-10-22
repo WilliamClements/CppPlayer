@@ -1,5 +1,4 @@
-#include <stdafx.h>
-#include <PropertySetWrapper.h>
+#include "PropertySetWrapper.h"
 #include <CppPlayer.hpp>
 #include <CppRecorder.hpp>
 #include <CRSError.h>

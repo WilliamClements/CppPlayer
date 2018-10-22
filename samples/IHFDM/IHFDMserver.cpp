@@ -1,4 +1,3 @@
-#include <stdafx.h>
 // IHFDMserver.cpp
 #include <IHFDMserver.h>
 

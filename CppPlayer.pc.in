@@ -1,0 +1,13 @@
+prefix=@CMAKE_INSTALL_PREFIX@
+exec_prefix=@CMAKE_INSTALL_PREFIX@
+libdir=${exec_prefix}/@CMAKE_INSTALL_LIBDIR@
+includedir=${exec_prefix}/@CMAKE_INSTALL_INCLUDEDIR@
+
+Name: leda
+Description: C++ utils header library
+Version: @PROJECT_VERSION@
+
+Requires:
+Libs: -L${libdir}
+Cflags: -I${includedir}
+
