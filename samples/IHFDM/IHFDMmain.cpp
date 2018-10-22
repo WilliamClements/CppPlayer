@@ -1,4 +1,3 @@
-#include <stdafx.h>
 // IHFDMmain.cpp
 #include <IHFDMmain.h>
 

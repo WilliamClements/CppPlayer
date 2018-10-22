@@ -1,4 +1,3 @@
-#include <stdafx.h>
 // WorkspaceWrapper.cpp
 #include <WorkspaceWrapper.h>
 

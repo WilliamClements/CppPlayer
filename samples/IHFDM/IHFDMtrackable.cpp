@@ -1,4 +1,3 @@
-#include <stdafx.h>
 // IHFDMtrackable.cpp
 #include <IHFDMtrackable.h>
 

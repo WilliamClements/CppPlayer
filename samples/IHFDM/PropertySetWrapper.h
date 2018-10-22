@@ -2,9 +2,9 @@
 
 #include <IPropertySet.h>
 #include <CppRecorder.hpp>
-#include <propertysets/properties/array_property.h>
-#include <propertysets/properties/reference_property.h>
-#include <propertysets/properties/string_property.h>
+#include "IPropertySet.h"
+//#include <propertysets/properties/reference_property.h>
+//#include <propertysets/properties/string_property.h>
 
 // Implementation of the IPropertySet interface that wraps real Lynx property sets.
 class PropertySetWrapper : public IPropertySet

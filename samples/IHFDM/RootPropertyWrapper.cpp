@@ -1,5 +1,4 @@
-#include <stdafx.h>
-#include <RootPropertyWrapper.h>
+#include "RootPropertyWrapper.h"
 
 #include <CppPlayer.hpp>
 #include <CppRecorder.hpp>
