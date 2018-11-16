@@ -28,8 +28,7 @@ public:
    IPlayer(CallMap& callMap)
       : IAgent{ callMap }
    {}
-   virtual ~IPlayer() = 0
-   {}
+   virtual ~IPlayer() = 0;
 };
 
 

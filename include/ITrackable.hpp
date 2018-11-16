@@ -36,8 +36,7 @@ public:
       static std::atomic_uint64_t serial = 1000000;
       objectKey = std::to_string(++serial);
    }
-   virtual ~ITrackable() = 0
-   {}
+   virtual ~ITrackable() = 0;
 
    // Attributes
    std::string objectKey;

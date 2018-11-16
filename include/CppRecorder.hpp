@@ -54,7 +54,7 @@ using Targeted = std::function<void(ITarget& rThis, const ArgsReader&)>;
 
 // This class stores information known about the call (in a map)
 template<class ITarget>
-class CppCall sealed
+class CppCall final
 {
 public:
    std::string m_api;

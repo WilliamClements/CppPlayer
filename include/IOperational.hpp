@@ -31,8 +31,7 @@ class IOperational : public ITrackable, public std::enable_shared_from_this<IOpe
 public:
    IOperational()
    {}
-   virtual ~IOperational() = 0
-   {}
+   virtual ~IOperational() = 0;
 
    // Methods
 public:
