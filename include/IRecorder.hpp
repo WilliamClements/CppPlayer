@@ -30,8 +30,7 @@ public:
    IRecorder(CallMap& callMap)
       : IAgent{ callMap }
    {}
-   virtual ~IRecorder() = 0
-   {}
+   virtual ~IRecorder() = 0;
 
    // Used by recordFunction and returnMethod, this adds a
    // call to the stream.

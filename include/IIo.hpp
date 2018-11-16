@@ -54,8 +54,7 @@ struct CppFileHeader
 class IIo
 {
 public:
-   virtual ~IIo() = 0
-   {}
+   virtual ~IIo() = 0;
 
    virtual CppFileHeader       getFileHeader() = 0;
    virtual void                setFileHeader(CppFileHeader) = 0;

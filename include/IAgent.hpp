@@ -30,8 +30,7 @@ public:
    IAgent(CallMap& callMap)
       : m_callStream(callMap)
    {}
-   virtual ~IAgent() = 0
-   {}
+   virtual ~IAgent() = 0;
 
    CallStream& callStream() const
    {
